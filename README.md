@@ -2,8 +2,8 @@
 A client cli for accessing shrimping platform with GRPC protocol, see our [website](https://get-shrimping.footprint-ai.com) for more details.
 
 #### Terminalogy
-- [Shrimping for Shopee](https://github.com/FootprintAI/shrimping-client/shrimping)
-- [Shritgram for Instagram](https://github.com/FootprintAI/shrimping-client/shritgram)
+- [Shrimping for Shopee](https://github.com/FootprintAI/shrimping-client/tree/main/shrimping)
+- [Shritgram for Instagram](https://github.com/FootprintAI/shrimping-client/tree/main/shritagram)
 
 
 ### Run with docker
