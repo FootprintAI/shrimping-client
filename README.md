@@ -1,6 +1,10 @@
 # Shrimping-client
 A client cli for accessing shrimping platform with GRPC protocol, see our [website](https://get-shrimping.footprint-ai.com) for more details.
 
+#### Terminalogy
+- [Shrimping for Shopee](https://github.com/FootprintAI/shrimping-client/shrimping)
+- [Shritgram for Instagram](https://github.com/FootprintAI/shrimping-client/shritgram)
+
 
 ### Run with docker
 
@@ -13,7 +17,7 @@ docker run \
 
 ### Run with Binary
 
-We now support Linux/Windows/Darwin platform with Golang's Cross-Compiled binary, you cna download them from `/binary` folders.
+We now support Linux/Windows/Darwin platform with Golang's Cross-Compiled binary, you cna download them from folders.
 
 ```
 ./shrimping.linux help
