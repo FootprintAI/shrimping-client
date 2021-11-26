@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+
+option go_package = "/pb";
+package pb;
+
+service versioning {
+    rpc Version(VersionRequest) returns (VersionResponse) {}
+}
+
+message VersionRequest{
+    string clientVersion = 1;
+}
+
+message VersionResponse {
+    string serverVersion = 1;
+    bool compatible = 2;
+}
+

@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option go_package = "/pb";
+package pb;
+
+service shrimpingInstagram {
+    rpc Profile(InstagramRequest) returns (stream InstagramResponse) {}
+    rpc Posts(InstagramRequest) returns (stream InstagramResponse) {}
+};
+
+message InstagramRequest {
+    repeated string usernames = 1;
+}
+
+message InstagramResponse {
+    repeated RawInstgramObject rawObjects = 1;
+}
+
+message RawInstgramObject {
+    string username = 1;
+    optional RawInstagramProfileObject rawProfile = 2;
+    repeated RawInstagramPostObject rawPosts = 3;
+}
+
+message RawInstagramProfileObject {
+    bytes rawBytes = 1;
+}
+
+message RawInstagramPostObject {
+    string shortcode = 1;
+    bytes rawBytes = 2;
+}
+

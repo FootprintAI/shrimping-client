@@ -8,4 +8,6 @@ docker cp grpcclient:/out/shrimping.darwin shrimping/shrimping.darwin
 docker cp grpcclient:/out/shritagram.linux shritagram/shritagram.linux
 docker cp grpcclient:/out/shritagram.windows.exe shritagram/shritagram.windows.exe
 docker cp grpcclient:/out/shritagram.darwin shritagram/shritagram.darwin
+
+docker cp grpcclient:/out/proto proto
 docker rm -f grpcclient
