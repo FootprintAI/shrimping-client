@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ShrimpingInstagramClient interface {
 	Profile(ctx context.Context, in *InstagramRequest, opts ...grpc.CallOption) (ShrimpingInstagram_ProfileClient, error)
 	Posts(ctx context.Context, in *InstagramRequest, opts ...grpc.CallOption) (ShrimpingInstagram_PostsClient, error)
+	TopSearch(ctx context.Context, in *InstagramTopSearchRequest, opts ...grpc.CallOption) (*InstagramTopSearchResponse, error)
 }
 
 type shrimpingInstagramClient struct {
@@ -94,12 +95,22 @@ func (x *shrimpingInstagramPostsClient) Recv() (*InstagramResponse, error) {
 	return m, nil
 }
 
+func (c *shrimpingInstagramClient) TopSearch(ctx context.Context, in *InstagramTopSearchRequest, opts ...grpc.CallOption) (*InstagramTopSearchResponse, error) {
+	out := new(InstagramTopSearchResponse)
+	err := c.cc.Invoke(ctx, "/pb.shrimpingInstagram/TopSearch", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ShrimpingInstagramServer is the server API for ShrimpingInstagram service.
 // All implementations must embed UnimplementedShrimpingInstagramServer
 // for forward compatibility
 type ShrimpingInstagramServer interface {
 	Profile(*InstagramRequest, ShrimpingInstagram_ProfileServer) error
 	Posts(*InstagramRequest, ShrimpingInstagram_PostsServer) error
+	TopSearch(context.Context, *InstagramTopSearchRequest) (*InstagramTopSearchResponse, error)
 	mustEmbedUnimplementedShrimpingInstagramServer()
 }
 
@@ -112,6 +123,9 @@ func (UnimplementedShrimpingInstagramServer) Profile(*InstagramRequest, Shrimpin
 }
 func (UnimplementedShrimpingInstagramServer) Posts(*InstagramRequest, ShrimpingInstagram_PostsServer) error {
 	return status.Errorf(codes.Unimplemented, "method Posts not implemented")
+}
+func (UnimplementedShrimpingInstagramServer) TopSearch(context.Context, *InstagramTopSearchRequest) (*InstagramTopSearchResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TopSearch not implemented")
 }
 func (UnimplementedShrimpingInstagramServer) mustEmbedUnimplementedShrimpingInstagramServer() {}
 
@@ -168,13 +182,36 @@ func (x *shrimpingInstagramPostsServer) Send(m *InstagramResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _ShrimpingInstagram_TopSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InstagramTopSearchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShrimpingInstagramServer).TopSearch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.shrimpingInstagram/TopSearch",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShrimpingInstagramServer).TopSearch(ctx, req.(*InstagramTopSearchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ShrimpingInstagram_ServiceDesc is the grpc.ServiceDesc for ShrimpingInstagram service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ShrimpingInstagram_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.shrimpingInstagram",
 	HandlerType: (*ShrimpingInstagramServer)(nil),
-	Methods:     []grpc.MethodDesc{},
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "TopSearch",
+			Handler:    _ShrimpingInstagram_TopSearch_Handler,
+		},
+	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Profile",
