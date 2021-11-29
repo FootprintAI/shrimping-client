@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+
+option go_package = "/pb";
+package pb;
+
+service shrimping {
+    rpc Login(LoginRequest) returns (LoginResponse) {}
+    rpc LookupItemByIDs(LookupItemByIDsRequest) returns (RawResponse) {}
+    rpc LookupItemBySales(LookupItemBySalesRequest) returns (RawResponse) {}
+};
+
+message LoginRequest {
+    string serviceType = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message LoginResponse {
+    string token = 1;
+}
+
+message LookupItemByIDsRequest {
+    repeated uint64 ids = 1;
+}
+
+message LookupItemBySalesRequest {
+    string dayCategory = 1;
+    optional int32 categoryId = 2;
+    optional string categoryName = 3;
+    optional int32 limit = 4;
+}
+
+message RawResponse {
+    repeated RawObject rawObjects = 1;
+}
+
+message RawObject {
+    optional bytes item = 1;
+}

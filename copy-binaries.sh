@@ -9,6 +9,6 @@ docker cp grpcclient:/out/shritagram.linux shritagram/shritagram.linux
 docker cp grpcclient:/out/shritagram.windows.exe shritagram/shritagram.windows.exe
 docker cp grpcclient:/out/shritagram.darwin shritagram/shritagram.darwin
 
-rm -rf proto
-docker cp grpcclient:/out/proto proto
+rm -rf src
+docker cp grpcclient:/src src
 docker rm -f grpcclient

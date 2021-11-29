@@ -5,6 +5,9 @@ A client cli for accessing shrimping platform with GRPC protocol, see our [websi
 - [Shrimping for Shopee](https://github.com/FootprintAI/shrimping-client/tree/main/shrimping)
 - [Shritgram for Instagram](https://github.com/FootprintAI/shrimping-client/tree/main/shritagram)
 
+#### Source code
+Codes under [src](./src) are only for referencing and proof-of-concepts, **use on your own risk**.
+
 
 ### Run with docker
 
@@ -29,8 +32,6 @@ Available Commands:
   category    lookup items by category name
   completion  generate the autocompletion script for the specified shell
   help        Help about any command
-  itemids     lookup items by item ids
-  itemurls    lookup items by item urls
   login       login with email & password
   version     show client veriosn
 
