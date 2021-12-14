@@ -18,9 +18,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ShrimpingInstagramClient interface {
-	Profile(ctx context.Context, in *InstagramRequest, opts ...grpc.CallOption) (ShrimpingInstagram_ProfileClient, error)
-	Posts(ctx context.Context, in *InstagramRequest, opts ...grpc.CallOption) (ShrimpingInstagram_PostsClient, error)
-	TopSearch(ctx context.Context, in *InstagramTopSearchRequest, opts ...grpc.CallOption) (*InstagramTopSearchResponse, error)
+	Callback(ctx context.Context, in *CallbackRequest, opts ...grpc.CallOption) (ShrimpingInstagram_CallbackClient, error)
+	Profile(ctx context.Context, in *InstagramProfileRequest, opts ...grpc.CallOption) (*InstagramResponse, error)
+	Posts(ctx context.Context, in *InstagramPostRequest, opts ...grpc.CallOption) (*InstagramResponse, error)
+	TopSearch(ctx context.Context, in *InstagramTopSearchRequest, opts ...grpc.CallOption) (*InstagramResponse, error)
 }
 
 type shrimpingInstagramClient struct {
@@ -31,12 +32,12 @@ func NewShrimpingInstagramClient(cc grpc.ClientConnInterface) ShrimpingInstagram
 	return &shrimpingInstagramClient{cc}
 }
 
-func (c *shrimpingInstagramClient) Profile(ctx context.Context, in *InstagramRequest, opts ...grpc.CallOption) (ShrimpingInstagram_ProfileClient, error) {
-	stream, err := c.cc.NewStream(ctx, &ShrimpingInstagram_ServiceDesc.Streams[0], "/pb.shrimpingInstagram/Profile", opts...)
+func (c *shrimpingInstagramClient) Callback(ctx context.Context, in *CallbackRequest, opts ...grpc.CallOption) (ShrimpingInstagram_CallbackClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ShrimpingInstagram_ServiceDesc.Streams[0], "/pb.shrimpingInstagram/Callback", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &shrimpingInstagramProfileClient{stream}
+	x := &shrimpingInstagramCallbackClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -46,16 +47,16 @@ func (c *shrimpingInstagramClient) Profile(ctx context.Context, in *InstagramReq
 	return x, nil
 }
 
-type ShrimpingInstagram_ProfileClient interface {
+type ShrimpingInstagram_CallbackClient interface {
 	Recv() (*InstagramResponse, error)
 	grpc.ClientStream
 }
 
-type shrimpingInstagramProfileClient struct {
+type shrimpingInstagramCallbackClient struct {
 	grpc.ClientStream
 }
 
-func (x *shrimpingInstagramProfileClient) Recv() (*InstagramResponse, error) {
+func (x *shrimpingInstagramCallbackClient) Recv() (*InstagramResponse, error) {
 	m := new(InstagramResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -63,40 +64,26 @@ func (x *shrimpingInstagramProfileClient) Recv() (*InstagramResponse, error) {
 	return m, nil
 }
 
-func (c *shrimpingInstagramClient) Posts(ctx context.Context, in *InstagramRequest, opts ...grpc.CallOption) (ShrimpingInstagram_PostsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &ShrimpingInstagram_ServiceDesc.Streams[1], "/pb.shrimpingInstagram/Posts", opts...)
+func (c *shrimpingInstagramClient) Profile(ctx context.Context, in *InstagramProfileRequest, opts ...grpc.CallOption) (*InstagramResponse, error) {
+	out := new(InstagramResponse)
+	err := c.cc.Invoke(ctx, "/pb.shrimpingInstagram/Profile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &shrimpingInstagramPostsClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
+	return out, nil
+}
+
+func (c *shrimpingInstagramClient) Posts(ctx context.Context, in *InstagramPostRequest, opts ...grpc.CallOption) (*InstagramResponse, error) {
+	out := new(InstagramResponse)
+	err := c.cc.Invoke(ctx, "/pb.shrimpingInstagram/Posts", in, out, opts...)
+	if err != nil {
 		return nil, err
 	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
+	return out, nil
 }
 
-type ShrimpingInstagram_PostsClient interface {
-	Recv() (*InstagramResponse, error)
-	grpc.ClientStream
-}
-
-type shrimpingInstagramPostsClient struct {
-	grpc.ClientStream
-}
-
-func (x *shrimpingInstagramPostsClient) Recv() (*InstagramResponse, error) {
-	m := new(InstagramResponse)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func (c *shrimpingInstagramClient) TopSearch(ctx context.Context, in *InstagramTopSearchRequest, opts ...grpc.CallOption) (*InstagramTopSearchResponse, error) {
-	out := new(InstagramTopSearchResponse)
+func (c *shrimpingInstagramClient) TopSearch(ctx context.Context, in *InstagramTopSearchRequest, opts ...grpc.CallOption) (*InstagramResponse, error) {
+	out := new(InstagramResponse)
 	err := c.cc.Invoke(ctx, "/pb.shrimpingInstagram/TopSearch", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -108,9 +95,10 @@ func (c *shrimpingInstagramClient) TopSearch(ctx context.Context, in *InstagramT
 // All implementations must embed UnimplementedShrimpingInstagramServer
 // for forward compatibility
 type ShrimpingInstagramServer interface {
-	Profile(*InstagramRequest, ShrimpingInstagram_ProfileServer) error
-	Posts(*InstagramRequest, ShrimpingInstagram_PostsServer) error
-	TopSearch(context.Context, *InstagramTopSearchRequest) (*InstagramTopSearchResponse, error)
+	Callback(*CallbackRequest, ShrimpingInstagram_CallbackServer) error
+	Profile(context.Context, *InstagramProfileRequest) (*InstagramResponse, error)
+	Posts(context.Context, *InstagramPostRequest) (*InstagramResponse, error)
+	TopSearch(context.Context, *InstagramTopSearchRequest) (*InstagramResponse, error)
 	mustEmbedUnimplementedShrimpingInstagramServer()
 }
 
@@ -118,13 +106,16 @@ type ShrimpingInstagramServer interface {
 type UnimplementedShrimpingInstagramServer struct {
 }
 
-func (UnimplementedShrimpingInstagramServer) Profile(*InstagramRequest, ShrimpingInstagram_ProfileServer) error {
-	return status.Errorf(codes.Unimplemented, "method Profile not implemented")
+func (UnimplementedShrimpingInstagramServer) Callback(*CallbackRequest, ShrimpingInstagram_CallbackServer) error {
+	return status.Errorf(codes.Unimplemented, "method Callback not implemented")
 }
-func (UnimplementedShrimpingInstagramServer) Posts(*InstagramRequest, ShrimpingInstagram_PostsServer) error {
-	return status.Errorf(codes.Unimplemented, "method Posts not implemented")
+func (UnimplementedShrimpingInstagramServer) Profile(context.Context, *InstagramProfileRequest) (*InstagramResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Profile not implemented")
 }
-func (UnimplementedShrimpingInstagramServer) TopSearch(context.Context, *InstagramTopSearchRequest) (*InstagramTopSearchResponse, error) {
+func (UnimplementedShrimpingInstagramServer) Posts(context.Context, *InstagramPostRequest) (*InstagramResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Posts not implemented")
+}
+func (UnimplementedShrimpingInstagramServer) TopSearch(context.Context, *InstagramTopSearchRequest) (*InstagramResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TopSearch not implemented")
 }
 func (UnimplementedShrimpingInstagramServer) mustEmbedUnimplementedShrimpingInstagramServer() {}
@@ -140,46 +131,61 @@ func RegisterShrimpingInstagramServer(s grpc.ServiceRegistrar, srv ShrimpingInst
 	s.RegisterService(&ShrimpingInstagram_ServiceDesc, srv)
 }
 
-func _ShrimpingInstagram_Profile_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(InstagramRequest)
+func _ShrimpingInstagram_Callback_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(CallbackRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ShrimpingInstagramServer).Profile(m, &shrimpingInstagramProfileServer{stream})
+	return srv.(ShrimpingInstagramServer).Callback(m, &shrimpingInstagramCallbackServer{stream})
 }
 
-type ShrimpingInstagram_ProfileServer interface {
+type ShrimpingInstagram_CallbackServer interface {
 	Send(*InstagramResponse) error
 	grpc.ServerStream
 }
 
-type shrimpingInstagramProfileServer struct {
+type shrimpingInstagramCallbackServer struct {
 	grpc.ServerStream
 }
 
-func (x *shrimpingInstagramProfileServer) Send(m *InstagramResponse) error {
+func (x *shrimpingInstagramCallbackServer) Send(m *InstagramResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _ShrimpingInstagram_Posts_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(InstagramRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
+func _ShrimpingInstagram_Profile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InstagramProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
 	}
-	return srv.(ShrimpingInstagramServer).Posts(m, &shrimpingInstagramPostsServer{stream})
+	if interceptor == nil {
+		return srv.(ShrimpingInstagramServer).Profile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.shrimpingInstagram/Profile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShrimpingInstagramServer).Profile(ctx, req.(*InstagramProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
-type ShrimpingInstagram_PostsServer interface {
-	Send(*InstagramResponse) error
-	grpc.ServerStream
-}
-
-type shrimpingInstagramPostsServer struct {
-	grpc.ServerStream
-}
-
-func (x *shrimpingInstagramPostsServer) Send(m *InstagramResponse) error {
-	return x.ServerStream.SendMsg(m)
+func _ShrimpingInstagram_Posts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InstagramPostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShrimpingInstagramServer).Posts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.shrimpingInstagram/Posts",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShrimpingInstagramServer).Posts(ctx, req.(*InstagramPostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ShrimpingInstagram_TopSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -208,19 +214,22 @@ var ShrimpingInstagram_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ShrimpingInstagramServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "Profile",
+			Handler:    _ShrimpingInstagram_Profile_Handler,
+		},
+		{
+			MethodName: "Posts",
+			Handler:    _ShrimpingInstagram_Posts_Handler,
+		},
+		{
 			MethodName: "TopSearch",
 			Handler:    _ShrimpingInstagram_TopSearch_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Profile",
-			Handler:       _ShrimpingInstagram_Profile_Handler,
-			ServerStreams: true,
-		},
-		{
-			StreamName:    "Posts",
-			Handler:       _ShrimpingInstagram_Posts_Handler,
+			StreamName:    "Callback",
+			Handler:       _ShrimpingInstagram_Callback_Handler,
 			ServerStreams: true,
 		},
 	},

@@ -5,7 +5,7 @@ import "fmt"
 var (
 	BuildTime   = ""
 	GitCommitId = ""
-	version     = "1.0.3"
+	version     = "1.1.0"
 )
 
 func GetVersion() string {

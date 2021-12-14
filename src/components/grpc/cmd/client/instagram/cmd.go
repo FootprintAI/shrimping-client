@@ -52,6 +52,21 @@ var (
 		},
 	}
 
+	callbackCmd = &cobra.Command{
+		Use:   "callback",
+		Short: "get instagram results with callback",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			run := mustNewRunCmd(serverAddr, apiKey, cachePolicy)
+			if err := run.callback(outputfolder); err != nil {
+				return err
+			}
+			if err := run.Close(); err != nil {
+				return err
+			}
+			return nil
+		},
+	}
+
 	profileCmd = &cobra.Command{
 		Use:   "profile",
 		Short: "get instagram profile with username",
@@ -69,7 +84,7 @@ var (
 
 	postsCmd = &cobra.Command{
 		Use:   "posts",
-		Short: "get instagram posts with username",
+		Short: "get instagram posts with shortcodes",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			run := mustNewRunCmd(serverAddr, apiKey, cachePolicy)
 			if err := run.getPosts(args, outputfolder); err != nil {
@@ -136,7 +151,7 @@ type runCmd struct {
 	startTime     time.Time
 }
 
-const defaultTimeoutInSecond = 180
+const defaultTimeoutInSecond = 60
 
 func timeoutInSec() int {
 	if timeout < 0 {
@@ -180,6 +195,14 @@ func (p *ProgressBar) reportLoop() {
 	}
 }
 
+func (r *runCmd) callback(outputfolder string) error {
+	cb := func(resp *protopb.InstagramResponse) error {
+		log.Infof("callback received.")
+		return writeInstagramObjectToFolder([]*protopb.InstagramResponse{resp}, outputfolder)
+	}
+	return r.clientService.Callback(cb)
+}
+
 func (r *runCmd) getProfile(usernames []string, outputfolder string) error {
 	out, err := r.clientService.Profile(usernames)
 	if err != nil {
@@ -188,30 +211,38 @@ func (r *runCmd) getProfile(usernames []string, outputfolder string) error {
 	return writeInstagramObjectToFolder(out, outputfolder)
 }
 
-func (r *runCmd) getPosts(usernames []string, outputfolder string) error {
-	out, err := r.clientService.Posts(usernames)
+func (r *runCmd) getPosts(shortcodes []string, outputfolder string) error {
+	out, err := r.clientService.Posts(shortcodes)
 	if err != nil {
 		return err
 	}
-	return writeInstagramObjectToFolder(out, outputfolder)
+	if err := writeInstagramObjectToFolder(out, outputfolder); err != nil {
+		return err
+	}
+	return nil
 }
 
-func writeInstagramObjectToFolder(outs []*protopb.RawInstgramObject, folder string) error {
-	for _, obj := range outs {
-		folderPath := filepath.Join(folder, obj.Username)
-		os.MkdirAll(folderPath, os.ModePerm)
-		if obj.RawProfile != nil {
-			if err := writeFile(filepath.Join(folderPath, "profile.html"), obj.RawProfile.RawBytes); err != nil {
+func writeInstagramObjectToFolder(outs []*protopb.InstagramResponse, folder string) error {
+	os.MkdirAll(folder, os.ModePerm)
+	for _, out := range outs {
+		for _, rawProfile := range out.RawProfiles {
+			folderPath := filepath.Join(folder, rawProfile.Username)
+			os.MkdirAll(folderPath, os.ModePerm)
+			if err := writeFile(filepath.Join(folderPath, "profile.html"), rawProfile.RawBytes); err != nil {
 				log.Errorf("failed to write file, err:%+v\n", err)
 				return err
 			}
 		}
-		for _, post := range obj.RawPosts {
-			if post != nil {
-				if err := writeFile(filepath.Join(folderPath, post.Shortcode), post.RawBytes); err != nil {
-					log.Errorf("failed to write file, err:%+v\n", err)
-					return err
-				}
+		for _, rawPost := range out.RawPosts {
+			if err := writeFile(filepath.Join(folder, rawPost.Shortcode), rawPost.RawBytes); err != nil {
+				log.Errorf("failed to write file, err:%+v\n", err)
+				return err
+			}
+		}
+		for _, rawSearch := range out.RawTopSearchs {
+			if err := writeFile(filepath.Join(folder, rawSearch.Hashtag), rawSearch.RawBytes); err != nil {
+				log.Errorf("failed to write file, err:%+v\n", err)
+				return err
 			}
 		}
 	}
@@ -228,17 +259,7 @@ func (r *runCmd) topSearch(keywords []string, outputfolder string) error {
 	if err != nil {
 		return err
 	}
-	return writeTopSearchObject(out, outputfolder)
-}
-
-func writeTopSearchObject(outs []*protopb.RawInstgramTopSearchObject, folder string) error {
-	for _, out := range outs {
-		if err := writeFile(filepath.Join(folder, out.Keyword), out.RawBytes); err != nil {
-			log.Errorf("failed to write file, err:%+v\n", err)
-			return err
-		}
-	}
-	return nil
+	return writeInstagramObjectToFolder(out, outputfolder)
 }
 
 func (r *runCmd) doVersion() error {
@@ -272,6 +293,7 @@ func Execute() error {
 
 func init() {
 	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(callbackCmd)
 	rootCmd.AddCommand(profileCmd)
 	rootCmd.AddCommand(postsCmd)
 	rootCmd.AddCommand(topsearchCmd)

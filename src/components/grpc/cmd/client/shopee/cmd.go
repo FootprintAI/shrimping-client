@@ -15,7 +15,7 @@ import (
 
 	"github.com/footprintai/shrimping/components/grpc/client"
 	shopeeclient "github.com/footprintai/shrimping/components/grpc/client/shopee"
-	"github.com/footprintai/shrimping/components/grpc/types"
+	shopeetypes "github.com/footprintai/shrimping/components/grpc/types/shopee"
 	"github.com/footprintai/shrimping/components/grpc/version"
 )
 
@@ -251,8 +251,8 @@ func (r *runCmd) doItemURLs(args []string) error {
 }
 
 func (r *runCmd) doCategory(args []string) error {
-	dateCategory := types.ParseDateCategory(dateCategory)
-	if dateCategory == types.UnknownDateCategory {
+	dateCategory := shopeetypes.ParseDateCategory(dateCategory)
+	if dateCategory == shopeetypes.UnknownDateCategory {
 		return fmt.Errorf("invalid sortedby value:%s\n", dateCategory)
 	}
 	fmt.Printf("lookup categories: %+v\n", args)

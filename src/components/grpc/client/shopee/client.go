@@ -13,7 +13,7 @@ import (
 	"github.com/footprintai/shrimping/components/grpc/client"
 	errors "github.com/footprintai/shrimping/components/grpc/errors"
 	pb "github.com/footprintai/shrimping/components/grpc/proto/pb"
-	"github.com/footprintai/shrimping/components/grpc/types"
+	shopeetypes "github.com/footprintai/shrimping/components/grpc/types/shopee"
 	"github.com/footprintai/shrimping/components/grpc/version"
 )
 
@@ -148,7 +148,7 @@ func (c ClientItem) ToCSVValue() []string {
 	}
 }
 
-func (c *Client) LookupItemBySales(dayCategory types.DateCategory, limit int32, categoryId *int32, categoryName *string) ([]ClientItem, error) {
+func (c *Client) LookupItemBySales(dayCategory shopeetypes.DateCategory, limit int32, categoryId *int32, categoryName *string) ([]ClientItem, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
 	defer cancel()
 

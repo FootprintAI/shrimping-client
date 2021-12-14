@@ -14,6 +14,8 @@ func ParseError(err error) *Error {
 		switch e.Code() {
 		case codes.OK:
 			return nil
+		case codes.ResourceExhausted:
+			return newError("Too many requests, please try again later.", err)
 		case codes.Unauthenticated:
 			return newError("Require Login first.", err)
 		case codes.Unavailable:

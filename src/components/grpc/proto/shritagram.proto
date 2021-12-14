@@ -6,12 +6,15 @@ option go_package = "/pb";
 package pb;
 
 service shrimpingInstagram {
-    rpc Profile(InstagramRequest) returns (stream InstagramResponse) {}
-    rpc Posts(InstagramRequest) returns (stream InstagramResponse) {}
-    rpc TopSearch(InstagramTopSearchRequest) returns (InstagramTopSearchResponse) {}
+    rpc Callback(CallbackRequest) returns (stream InstagramResponse) {}
+    rpc Profile(InstagramProfileRequest) returns (InstagramResponse) {}
+    rpc Posts(InstagramPostRequest) returns (InstagramResponse) {}
+    rpc TopSearch(InstagramTopSearchRequest) returns (InstagramResponse) {}
 };
 
-message InstagramRequest {
+message CallbackRequest {}
+
+message InstagramProfileRequest {
     repeated string usernames = 1;
     // cacheControl has possible values:
     // no-cache: the request won't go through backend server's cache, it is revalidated with the actualy service (i.g. instagram) 
@@ -21,24 +24,32 @@ message InstagramRequest {
     string cacheControl = 2;
 }
 
+message InstagramPostRequest {
+    repeated string shortcodes = 1;
+    // cacheControl has possible values:
+    // no-cache: the request won't go through backend server's cache, it is revalidated with the actualy service (i.g. instagram) 
+    // max-age=604800: the request's result will be kept in cache with the duration(in s) specified
+    //
+    // default value is  max-age=86400
+    string cacheControl = 2;
+}
+
+
 enum InstagramObjectCompressionAlgorithm {
     NONE = 0;
     GZIP = 1;
 }
 
 message InstagramResponse {
-    repeated RawInstgramObject rawObjects = 1;
-    InstagramObjectCompressionAlgorithm compression = 2;
-}
-
-message RawInstgramObject {
-    string username = 1;
-    optional RawInstagramProfileObject rawProfile = 11;
-    repeated RawInstagramPostObject rawPosts = 12;
+    InstagramObjectCompressionAlgorithm compression = 1;
+    repeated RawInstagramProfileObject rawProfiles = 2;
+    repeated RawInstagramPostObject rawPosts = 3;
+    repeated RawInstgramTopSearchObject rawTopSearchs = 4;
 }
 
 message RawInstagramProfileObject {
-    bytes rawBytes = 1;
+    string username = 1;
+    bytes rawBytes = 2;
 }
 
 message RawInstagramPostObject {
@@ -47,15 +58,16 @@ message RawInstagramPostObject {
 }
 
 message InstagramTopSearchRequest {
-    repeated string keywords = 1; // without `#`
-}
-
-message InstagramTopSearchResponse{
-    repeated RawInstgramTopSearchObject rawObjects = 1;
-    InstagramObjectCompressionAlgorithm compression = 2;
+    repeated string hashtags = 1; // without `#`
+    // cacheControl has possible values:
+    // no-cache: the request won't go through backend server's cache, it is revalidated with the actualy service (i.g. instagram) 
+    // max-age=604800: the request's result will be kept in cache with the duration(in s) specified
+    //
+    // default value is  max-age=86400
+    string cacheControl = 2;
 }
 
 message RawInstgramTopSearchObject {
-    string keyword = 1;
+    string hashtag = 1;
     bytes rawBytes = 2;
 }

@@ -6,12 +6,14 @@ import (
 	"io"
 	"time"
 
+	log "github.com/golang/glog"
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
 	"github.com/footprintai/shrimping/components/grpc/client"
 	"github.com/footprintai/shrimping/components/grpc/compression"
+	errors "github.com/footprintai/shrimping/components/grpc/errors"
 	pb "github.com/footprintai/shrimping/components/grpc/proto/pb"
 	"github.com/footprintai/shrimping/components/grpc/version"
 )
@@ -42,26 +44,40 @@ type Client struct {
 	cachePolicy string
 }
 
-func (c *Client) Profile(usernames []string) ([]*pb.RawInstgramObject, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
-	defer cancel()
-
-	stream, err := c.pbClient.Profile(c.ctxWithToken(ctx), &pb.InstagramRequest{
-		Usernames:    usernames,
-		CacheControl: c.cachePolicy,
-	}, c.callOpts...)
+func (c *Client) Callback(cb func(*pb.InstagramResponse) error) error {
+	ctx := context.Background()
+	stream, err := c.pbClient.Callback(c.ctxWithToken(ctx), &pb.CallbackRequest{}, c.callOpts...)
 	if err != nil {
-		return nil, err
+		return errors.ParseError(err)
 	}
-	var out []*pb.RawInstgramObject
 	for {
 		resp, err := stream.Recv()
 		if err == io.EOF {
 			break
+		} else if err != nil {
+			log.Errorf("callback received failed, err:%+s\n", err)
+			return errors.ParseError(err)
 		}
-		out = append(out, decompress(resp).RawObjects...)
+		if err := cb(decompress(resp)); err != nil {
+			log.Errorf("callback failed, err:%+s\n", err)
+			return errors.ParseError(err)
+		}
 	}
-	return out, nil
+	return nil
+}
+
+func (c *Client) Profile(usernames []string) ([]*pb.InstagramResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
+	defer cancel()
+
+	resp, err := c.pbClient.Profile(c.ctxWithToken(ctx), &pb.InstagramProfileRequest{
+		Usernames:    usernames,
+		CacheControl: c.cachePolicy,
+	}, c.callOpts...)
+	if err != nil {
+		return nil, errors.ParseError(err)
+	}
+	return []*pb.InstagramResponse{decompress(resp)}, nil
 }
 
 func decompress(out *pb.InstagramResponse) *pb.InstagramResponse {
@@ -69,16 +85,20 @@ func decompress(out *pb.InstagramResponse) *pb.InstagramResponse {
 		return out
 	}
 	compressor := &compression.GzipEncodeDecoder{}
-	for _, rawObject := range out.RawObjects {
-		if rawObject != nil {
-			if rawObject.RawProfile != nil {
-				rawObject.RawProfile.RawBytes, _ = compressor.Decode(rawObject.RawProfile.RawBytes)
-			}
-			for _, rawPost := range rawObject.RawPosts {
-				if rawPost != nil {
-					rawPost.RawBytes, _ = compressor.Decode(rawPost.RawBytes)
-				}
-			}
+	for _, rawProfile := range out.RawProfiles {
+		if rawProfile != nil {
+			rawProfile.RawBytes, _ = compressor.Decode(rawProfile.RawBytes)
+
+		}
+	}
+	for _, rawPost := range out.RawPosts {
+		if rawPost != nil {
+			rawPost.RawBytes, _ = compressor.Decode(rawPost.RawBytes)
+		}
+	}
+	for _, rawSearch := range out.RawTopSearchs {
+		if rawSearch != nil {
+			rawSearch.RawBytes, _ = compressor.Decode(rawSearch.RawBytes)
 		}
 	}
 	return out
@@ -90,52 +110,31 @@ func (c *Client) ctxWithToken(ctx context.Context) context.Context {
 	return nCtx
 }
 
-func (c *Client) Posts(usernames []string) ([]*pb.RawInstgramObject, error) {
+func (c *Client) Posts(shortcodes []string) ([]*pb.InstagramResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
 	defer cancel()
 
-	stream, err := c.pbClient.Posts(c.ctxWithToken(ctx), &pb.InstagramRequest{
-		Usernames:    usernames,
+	resp, err := c.pbClient.Posts(c.ctxWithToken(ctx), &pb.InstagramPostRequest{
+		Shortcodes:   shortcodes,
 		CacheControl: c.cachePolicy,
 	}, c.callOpts...)
 	if err != nil {
-		return nil, err
+		return nil, errors.ParseError(err)
 	}
-	var out []*pb.RawInstgramObject
-	for {
-		resp, err := stream.Recv()
-		if err == io.EOF {
-			break
-		}
-		out = append(out, decompress(resp).RawObjects...)
-	}
-	return out, nil
+	return []*pb.InstagramResponse{decompress(resp)}, nil
 }
 
-func (c *Client) TopSearch(keywords []string) ([]*pb.RawInstgramTopSearchObject, error) {
+func (c *Client) TopSearch(hashtags []string) ([]*pb.InstagramResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
 	defer cancel()
 
 	out, err := c.pbClient.TopSearch(c.ctxWithToken(ctx), &pb.InstagramTopSearchRequest{
-		Keywords: keywords,
+		Hashtags: hashtags,
 	}, c.callOpts...)
 	if err != nil {
-		return nil, err
+		return nil, errors.ParseError(err)
 	}
-	return decompressTopSearch(out).RawObjects, nil
-}
-
-func decompressTopSearch(out *pb.InstagramTopSearchResponse) *pb.InstagramTopSearchResponse {
-	if out.Compression != pb.InstagramObjectCompressionAlgorithm_GZIP {
-		return out
-	}
-	compressor := &compression.GzipEncodeDecoder{}
-	for _, rawObject := range out.RawObjects {
-		if rawObject != nil {
-			rawObject.RawBytes, _ = compressor.Decode(rawObject.RawBytes)
-		}
-	}
-	return out
+	return []*pb.InstagramResponse{decompress(out)}, nil
 }
 
 func (c *Client) Version() (serverVersion string, isVersionCompatible bool, err error) {
