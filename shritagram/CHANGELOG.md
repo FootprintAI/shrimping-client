@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.5] - 2021-12-28
+### Added
+- Added client reconnect mechanism when the server is unavailable.
+- Added empty parameter check, and return `http:400` when it is empty parameters.
+- Added swagger resources for its corresponding grpc stubs.
+
 ## [1.1.0] - 2021-12-14
 ### Changed
 - Use shortcode in `Post` Call where previously we allows it to be username.
