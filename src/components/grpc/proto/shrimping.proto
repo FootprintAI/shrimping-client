@@ -1,13 +1,101 @@
 syntax = "proto3";
 
-
-option go_package = "/pb";
 package pb;
+option go_package = "/pb";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+	info: {
+		title: "Shrimping API Documentations";
+		version: "1.0";
+		contact: {
+			name: "shrimping restapi documentation";
+			url: "https://github.com/footprintai/shrimping-client";
+			email: "shrimping@footprint-ai.com";
+		};
+		license: {
+			name: "BSD 3-Clause License";
+			url: "https://github.com/footprintai/shrimping-client/blob/master/LICENSE.txt";
+		};
+	};
+	// Overwriting host entry breaks tests, so this is not done here.
+	external_docs: {
+		url: "https://github.com/footprintai/shrimping-client";
+		description: "shrimping restapi";
+	}
+	schemes: HTTP;
+	schemes: HTTPS;
+	consumes: "application/json";
+	produces: "application/json";
+	security_definitions: {
+		security: {
+			key: "BearerAuth";
+			value: {
+				type: TYPE_API_KEY;
+				in: IN_HEADER;
+				name: "Authorization";
+			}
+		}
+
+	}
+	security: {
+		security_requirement: {
+			key: "BearerAuth";
+			value: {};
+		}
+	}
+	responses: {
+		key: "403";
+		value: {
+			description: "Returned when the user does not have permission to access the resource.";
+		}
+	}
+	responses: {
+		key: "404";
+		value: {
+			description: "Returned when the resource does not exist.";
+			schema: {
+				json_schema: {
+					type: STRING;
+				}
+			}
+		}
+	}
+	responses: {
+		key: "500";
+		value: {
+			description: "Server error";
+			schema: {
+				json_schema: {
+                    type: STRING;
+				}
+			}
+		}
+	}
+};
+
 
 service shrimping {
-    rpc Login(LoginRequest) returns (LoginResponse) {}
-    rpc LookupItemByIDs(LookupItemByIDsRequest) returns (RawResponse) {}
-    rpc LookupItemBySales(LookupItemBySalesRequest) returns (RawResponse) {}
+    rpc Login(LoginRequest) returns (LoginResponse) {
+        option (google.api.http) = {
+            post: "/v1/login"
+            body: "*"
+        };
+    }
+    rpc LookupItemByIDs(LookupItemByIDsRequest) returns (RawResponse) {
+        option (google.api.http) = {
+            post: "/v1/items:get"
+            body: "*"
+        };
+    }
+    rpc LookupItemBySales(LookupItemBySalesRequest) returns (RawResponse) {
+        option (google.api.http) = {
+            post: "/v1/sales:get"
+            body: "*"
+        };
+    }
 };
 
 message LoginRequest {

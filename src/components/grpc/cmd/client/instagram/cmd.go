@@ -57,6 +57,7 @@ var (
 		Short: "get instagram results with callback",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			run := mustNewRunCmd(serverAddr, apiKey, cachePolicy)
+			run.shortVersion()
 			if err := run.callback(outputfolder); err != nil {
 				return err
 			}
@@ -72,6 +73,7 @@ var (
 		Short: "get instagram profile with username",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			run := mustNewRunCmd(serverAddr, apiKey, cachePolicy)
+			run.shortVersion()
 			if err := run.getProfile(args, outputfolder); err != nil {
 				return err
 			}
@@ -87,6 +89,7 @@ var (
 		Short: "get instagram posts with shortcodes",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			run := mustNewRunCmd(serverAddr, apiKey, cachePolicy)
+			run.shortVersion()
 			if err := run.getPosts(args, outputfolder); err != nil {
 				return err
 			}
@@ -102,6 +105,7 @@ var (
 		Short: "search instagram with keyword or hashtag",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			run := mustNewRunCmd(serverAddr, apiKey, cachePolicy)
+			run.shortVersion()
 			if err := run.topSearch(args, outputfolder); err != nil {
 				return err
 			}
@@ -260,6 +264,14 @@ func (r *runCmd) topSearch(keywords []string, outputfolder string) error {
 		return err
 	}
 	return writeInstagramObjectToFolder(out, outputfolder)
+}
+
+func (r *runCmd) shortVersion() {
+	ver, _, _ := r.clientService.Version()
+	if version.Great(ver, version.GetVersion()) {
+		fmt.Printf("the latest version is %s, while you are in %s\n", ver, version.GetVersion())
+		fmt.Printf("please go to https://github.com/footprintai/shrimping-client to download latest version\n")
+	}
 }
 
 func (r *runCmd) doVersion() error {

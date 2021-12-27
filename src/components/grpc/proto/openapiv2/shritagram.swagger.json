@@ -1,0 +1,408 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Shritagram API Documentations",
+    "version": "1.0",
+    "contact": {
+      "name": "shritagram restapi documentation",
+      "url": "https://github.com/footprintai/shrimping-client",
+      "email": "shrimping@footprint-ai.com"
+    },
+    "license": {
+      "name": "BSD 3-Clause License",
+      "url": "https://github.com/footprintai/shrimping-client/blob/master/LICENSE.txt"
+    }
+  },
+  "tags": [
+    {
+      "name": "shrimpingInstagram"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/callback:stream": {
+      "post": {
+        "operationId": "shrimpingInstagram_Callback",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/pbInstagramResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/rpcStatus"
+                }
+              },
+              "title": "Stream result of pbInstagramResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCallbackRequest"
+            }
+          }
+        ],
+        "tags": [
+          "shrimpingInstagram"
+        ]
+      }
+    },
+    "/v1/posts:get": {
+      "post": {
+        "operationId": "shrimpingInstagram_Posts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbInstagramResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbInstagramPostRequest"
+            }
+          }
+        ],
+        "tags": [
+          "shrimpingInstagram"
+        ]
+      }
+    },
+    "/v1/profiles:get": {
+      "post": {
+        "operationId": "shrimpingInstagram_Profile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbInstagramResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbInstagramProfileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "shrimpingInstagram"
+        ]
+      }
+    },
+    "/v1/topsearchs:get": {
+      "post": {
+        "operationId": "shrimpingInstagram_TopSearch",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbInstagramResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbInstagramTopSearchRequest"
+            }
+          }
+        ],
+        "tags": [
+          "shrimpingInstagram"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "pbCallbackRequest": {
+      "type": "object"
+    },
+    "pbInstagramObjectCompressionAlgorithm": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "GZIP"
+      ],
+      "default": "NONE"
+    },
+    "pbInstagramPostRequest": {
+      "type": "object",
+      "properties": {
+        "shortcodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cacheControl": {
+          "type": "string",
+          "description": "default value is  max-age=86400",
+          "title": "cacheControl has possible values:\nno-cache: the request won't go through backend server's cache, it is revalidated with the actualy service (i.g. instagram) \nmax-age=604800: the request's result will be kept in cache with the duration(in s) specified"
+        }
+      }
+    },
+    "pbInstagramProfileRequest": {
+      "type": "object",
+      "properties": {
+        "usernames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cacheControl": {
+          "type": "string",
+          "description": "default value is  max-age=86400",
+          "title": "cacheControl has possible values:\nno-cache: the request won't go through backend server's cache, it is revalidated with the actualy service (i.g. instagram) \nmax-age=604800: the request's result will be kept in cache with the duration(in s) specified"
+        }
+      }
+    },
+    "pbInstagramResponse": {
+      "type": "object",
+      "properties": {
+        "compression": {
+          "$ref": "#/definitions/pbInstagramObjectCompressionAlgorithm"
+        },
+        "rawProfiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbRawInstagramProfileObject"
+          }
+        },
+        "rawPosts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbRawInstagramPostObject"
+          }
+        },
+        "rawTopSearchs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbRawInstgramTopSearchObject"
+          }
+        }
+      }
+    },
+    "pbInstagramTopSearchRequest": {
+      "type": "object",
+      "properties": {
+        "hashtags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cacheControl": {
+          "type": "string",
+          "description": "default value is  max-age=86400",
+          "title": "cacheControl has possible values:\nno-cache: the request won't go through backend server's cache, it is revalidated with the actualy service (i.g. instagram) \nmax-age=604800: the request's result will be kept in cache with the duration(in s) specified"
+        }
+      }
+    },
+    "pbRawInstagramPostObject": {
+      "type": "object",
+      "properties": {
+        "shortcode": {
+          "type": "string"
+        },
+        "rawBytes": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "pbRawInstagramProfileObject": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "rawBytes": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "pbRawInstgramTopSearchObject": {
+      "type": "object",
+      "properties": {
+        "hashtag": {
+          "type": "string"
+        },
+        "rawBytes": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "X-API-Key",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "externalDocs": {
+    "description": "shritagram restapi",
+    "url": "https://github.com/footprintai/shrimping-client"
+  }
+}

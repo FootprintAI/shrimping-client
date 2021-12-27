@@ -46,24 +46,31 @@ type Client struct {
 
 func (c *Client) Callback(cb func(*pb.InstagramResponse) error) error {
 	ctx := context.Background()
-	stream, err := c.pbClient.Callback(c.ctxWithToken(ctx), &pb.CallbackRequest{}, c.callOpts...)
-	if err != nil {
-		return errors.ParseError(err)
-	}
 	for {
-		resp, err := stream.Recv()
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			log.Errorf("callback received failed, err:%+s\n", err)
+		stream, err := c.pbClient.Callback(c.ctxWithToken(ctx), &pb.CallbackRequest{}, c.callOpts...)
+		if err != nil {
+			log.Errorf("get pbclient failed, err:%s", err)
 			return errors.ParseError(err)
 		}
-		if err := cb(decompress(resp)); err != nil {
-			log.Errorf("callback failed, err:%+s\n", err)
-			return errors.ParseError(err)
+		for {
+			log.Info("callback: start receiving")
+			resp, err := stream.Recv()
+			if err == io.EOF {
+				log.Info("callback: got eof, reconnecting")
+				break
+			} else if err != nil {
+				log.Infof("callback: got err:%+v, reconnecting", err)
+				break
+			}
+			if err := cb(decompress(resp)); err != nil {
+				log.Errorf("callback failed, err:%+s\n", err)
+				return errors.ParseError(err)
+			}
+		}
+		if err := c.conn.WaitForReconnect(ctx); err != nil {
+			return err
 		}
 	}
-	return nil
 }
 
 func (c *Client) Profile(usernames []string) ([]*pb.InstagramResponse, error) {
@@ -105,7 +112,7 @@ func decompress(out *pb.InstagramResponse) *pb.InstagramResponse {
 }
 
 func (c *Client) ctxWithToken(ctx context.Context) context.Context {
-	md := metadata.Pairs("authorization", fmt.Sprintf("api-key %v", c.apiKey))
+	md := metadata.Pairs("authorization", fmt.Sprintf("X-API-Key %v", c.apiKey))
 	nCtx := metautils.NiceMD(md).ToOutgoing(ctx)
 	return nCtx
 }
