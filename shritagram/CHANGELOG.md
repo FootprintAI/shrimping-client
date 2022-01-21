@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.0] - 2022-01-21
+### Added
+- Added topsearch implemenation on server side.
+- Added lazy initialization module.
+
 ## [1.1.5] - 2021-12-28
 ### Added
 - Added client reconnect mechanism when the server is unavailable.
