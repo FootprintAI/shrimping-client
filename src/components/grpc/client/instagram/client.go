@@ -148,11 +148,10 @@ func (c *Client) Version() (serverVersion string, isVersionCompatible bool, err 
 	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
 	defer cancel()
 
-	ver := version.GetVersion()
 	resp, err := c.verClient.Version(
 		c.ctxWithToken(ctx),
 		&pb.VersionRequest{
-			ClientVersion: ver,
+			ClientVersion: version.GetVersion(),
 		},
 	)
 	if err != nil {

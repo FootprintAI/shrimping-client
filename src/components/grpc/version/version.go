@@ -2,34 +2,25 @@ package version
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
+
+	goversion "github.com/hashicorp/go-version"
 )
-
-func Great(s1, s2 string) bool {
-	s1v := convertVer2Numeric(s1)
-	s2v := convertVer2Numeric(s2)
-	return s1v > s2v
-}
-
-func convertVer2Numeric(s string) int {
-	parts := strings.SplitN(s, ".", 3)
-	return mustConvert2Int(parts[0])*1000*1000 + mustConvert2Int(parts[1])*1000 + mustConvert2Int(parts[2])
-}
-
-func mustConvert2Int(s string) int {
-	v, _ := strconv.Atoi(s)
-	return v
-}
 
 var (
 	BuildTime   = ""
 	GitCommitId = ""
-	version     = "1.1.5"
+	version, _  = goversion.NewVersion("1.2.0")
 )
 
+func GreatThan(v1, v2 string) bool {
+	v1v, _ := goversion.NewVersion(v1)
+	v2v, _ := goversion.NewVersion(v2)
+
+	return v1v.GreaterThan(v2v)
+}
+
 func GetVersion() string {
-	return version
+	return version.String()
 }
 
 func GetBuildTime() string {
@@ -41,7 +32,5 @@ func GetCommitHash() string {
 }
 
 func Print() {
-	fmt.Printf("========shrimping cli=======\n")
-	fmt.Printf("commit hash: %s\nbuild time: %s\nclient verison: %s\n", GitCommitId, BuildTime, version)
-	fmt.Printf("============================\n")
+	fmt.Printf("ver:%s, build time:%s, hashid:%s\n", version.String(), BuildTime, GitCommitId)
 }

@@ -2,17 +2,29 @@ package client
 
 import (
 	"context"
+	"flag"
 	"sync"
 
 	log "github.com/golang/glog"
 	"google.golang.org/grpc"
 )
 
+var (
+	disableLazyInit = flag.Bool("disableLazyInit", false, "Disable lazy init, default: false")
+)
+
 func NewGrpcLazyClinet(serverAddr string) (*GrpcLazyClient, error) {
-	log.Infof("use lazy client for addr:%s, the actual client may not initialized yet!\n", serverAddr)
-	return &GrpcLazyClient{
+	lazyClient := &GrpcLazyClient{
 		serverAddr: serverAddr,
-	}, nil
+	}
+	if *disableLazyInit {
+		if err := lazyClient.initOnce(); err != nil {
+			return nil, err
+		}
+	} else {
+		log.Infof("use lazy client for addr:%s, the actual client may not initialized yet!\n", serverAddr)
+	}
+	return lazyClient, nil
 }
 
 type GrpcLazyClient struct {
@@ -25,7 +37,9 @@ type GrpcLazyClient struct {
 func (l *GrpcLazyClient) initOnce() error {
 	var err error
 	l.once.Do(func() {
-		l.GrpcClient, err = NewGrpcClient(l.serverAddr)
+		if l.GrpcClient == nil {
+			l.GrpcClient, err = NewGrpcClient(l.serverAddr)
+		}
 	})
 	if err != nil {
 		return err

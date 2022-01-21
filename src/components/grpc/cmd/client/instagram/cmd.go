@@ -267,9 +267,10 @@ func (r *runCmd) topSearch(keywords []string, outputfolder string) error {
 }
 
 func (r *runCmd) shortVersion() {
-	ver, _, _ := r.clientService.Version()
-	if version.Great(ver, version.GetVersion()) {
-		fmt.Printf("the latest version is %s, while you are in %s\n", ver, version.GetVersion())
+	serverVer, _, _ := r.clientService.Version()
+	clientVer := version.GetVersion()
+	if version.GreatThan(serverVer, clientVer) {
+		fmt.Printf("the latest version is %s, while you are in %s\n", serverVer, clientVer)
 		fmt.Printf("please go to https://github.com/footprintai/shrimping-client to download latest version\n")
 	}
 }
