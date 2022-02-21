@@ -1,0 +1,433 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Shritagram API Documentations",
+    "version": "1.0",
+    "contact": {
+      "name": "shritagram restapi documentation",
+      "url": "https://github.com/footprintai/shrimping-client",
+      "email": "shrimping@footprint-ai.com"
+    },
+    "license": {
+      "name": "BSD 3-Clause License",
+      "url": "https://github.com/footprintai/shrimping-client/blob/master/LICENSE.txt"
+    }
+  },
+  "tags": [
+    {
+      "name": "WebhookCRUD"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/webhook:delete": {
+      "post": {
+        "operationId": "WebhookCRUD_DeleteWebhook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbDeleteWebhookResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbDeleteWebhookRequest"
+            }
+          }
+        ],
+        "tags": [
+          "WebhookCRUD"
+        ]
+      }
+    },
+    "/v1/webhook:list": {
+      "post": {
+        "operationId": "WebhookCRUD_ListWebhook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbListWebhookResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbListWebhookRequest"
+            }
+          }
+        ],
+        "tags": [
+          "WebhookCRUD"
+        ]
+      }
+    },
+    "/v1/webhook:signature": {
+      "post": {
+        "operationId": "WebhookCRUD_VerifySignature",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbVerifySignatureResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbVerifySignatureRequest"
+            }
+          }
+        ],
+        "tags": [
+          "WebhookCRUD"
+        ]
+      }
+    },
+    "/v1/webhook:subscribe": {
+      "post": {
+        "operationId": "WebhookCRUD_SubscribeWebhook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbSubscribeWebhookResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbSubscribeWebhookRequest"
+            }
+          }
+        ],
+        "tags": [
+          "WebhookCRUD"
+        ]
+      }
+    },
+    "/v1/webhook:test": {
+      "post": {
+        "operationId": "WebhookCRUD_TestWebhook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbTestWebhookResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbTestWebhookRequest"
+            }
+          }
+        ],
+        "tags": [
+          "WebhookCRUD"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "pbDeleteWebhookRequest": {
+      "type": "object",
+      "properties": {
+        "apiKeys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "pbDeleteWebhookResponse": {
+      "type": "object"
+    },
+    "pbListWebhookRequest": {
+      "type": "object"
+    },
+    "pbListWebhookResponse": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pbWebhookData"
+          }
+        }
+      }
+    },
+    "pbSubscribeWebhookRequest": {
+      "type": "object",
+      "properties": {
+        "webhookAddress": {
+          "type": "string"
+        },
+        "forceHttps": {
+          "type": "boolean"
+        }
+      }
+    },
+    "pbSubscribeWebhookResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/pbWebhookData"
+        }
+      }
+    },
+    "pbTestWebhookRequest": {
+      "type": "object"
+    },
+    "pbTestWebhookResponse": {
+      "type": "object"
+    },
+    "pbVerifySignatureRequest": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "hmackey": {
+          "type": "string"
+        },
+        "bodyDigest": {
+          "type": "string"
+        },
+        "createdTs": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "pbVerifySignatureResponse": {
+      "type": "object",
+      "properties": {
+        "signStr": {
+          "type": "string"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "httpHeaders": {
+          "type": "string"
+        }
+      }
+    },
+    "pbWebhookData": {
+      "type": "object",
+      "properties": {
+        "apiKey": {
+          "type": "string"
+        },
+        "secretKey": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "externalDocs": {
+    "description": "shritagram restapi",
+    "url": "https://github.com/footprintai/shrimping-client"
+  }
+}

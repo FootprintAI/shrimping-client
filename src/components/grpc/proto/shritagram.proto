@@ -37,7 +37,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 			value: {
 				type: TYPE_API_KEY;
 				in: IN_HEADER;
-				name: "X-API-Key";
+				name: "Authorization";
 			}
 		}
 	}
@@ -78,26 +78,26 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 
-service shrimpingInstagram {
-    rpc Callback(CallbackRequest) returns (stream InstagramResponse) {
+service shritagram {
+    rpc Callback(CallbackRequest) returns (stream ShritagramResponse) {
         option (google.api.http) = {
             post: "/v1/callback:stream"
             body: "*"
         };
     }
-    rpc Profile(InstagramProfileRequest) returns (InstagramResponse) {
+    rpc Profile(ProfileRequest) returns (ShritagramResponse) {
         option (google.api.http) = {
             post: "/v1/profiles:get"
             body: "*"
         };
     }
-    rpc Posts(InstagramPostRequest) returns (InstagramResponse) {
+    rpc Posts(PostRequest) returns (ShritagramResponse) {
         option (google.api.http) = {
             post: "/v1/posts:get"
             body: "*"
         };
     }
-    rpc TopSearch(InstagramTopSearchRequest) returns (InstagramResponse) {
+    rpc TopSearch(TopSearchRequest) returns (ShritagramResponse) {
         option (google.api.http) = {
             post: "/v1/topsearchs:get"
             body: "*"
@@ -107,7 +107,7 @@ service shrimpingInstagram {
 
 message CallbackRequest {}
 
-message InstagramProfileRequest {
+message ProfileRequest {
     repeated string usernames = 1;
     // cacheControl has possible values:
     // no-cache: the request won't go through backend server's cache, it is revalidated with the actualy service (i.g. instagram) 
@@ -115,9 +115,13 @@ message InstagramProfileRequest {
     //
     // default value is  max-age=86400
     string cacheControl = 2;
+
+    // priority has three possible values: high/median/low.
+    // the server will execute jobs according to its priority.
+    string priority = 3;
 }
 
-message InstagramPostRequest {
+message PostRequest {
     repeated string shortcodes = 1;
     // cacheControl has possible values:
     // no-cache: the request won't go through backend server's cache, it is revalidated with the actualy service (i.g. instagram) 
@@ -125,32 +129,36 @@ message InstagramPostRequest {
     //
     // default value is  max-age=86400
     string cacheControl = 2;
+
+    // priority has three possible values: high/median/low.
+    // the server will execute jobs according to its priority.
+    string priority = 3;
 }
 
 
-enum InstagramObjectCompressionAlgorithm {
+enum ObjectCompressionAlgorithm {
     NONE = 0;
     GZIP = 1;
 }
 
-message InstagramResponse {
-    InstagramObjectCompressionAlgorithm compression = 1;
-    repeated RawInstagramProfileObject rawProfiles = 2;
-    repeated RawInstagramPostObject rawPosts = 3;
-    repeated RawInstgramTopSearchObject rawTopSearchs = 4;
+message ShritagramResponse {
+    ObjectCompressionAlgorithm compression = 1;
+    repeated RawProfileObject rawProfiles = 2;
+    repeated RawPostObject rawPosts = 3;
+    repeated RawTopSearchObject rawTopSearchs = 4;
 }
 
-message RawInstagramProfileObject {
+message RawProfileObject {
     string username = 1;
     bytes rawBytes = 2;
 }
 
-message RawInstagramPostObject {
+message RawPostObject {
     string shortcode = 1;
     bytes rawBytes = 2;
 }
 
-message InstagramTopSearchRequest {
+message TopSearchRequest {
     repeated string hashtags = 1; // without `#`
     // cacheControl has possible values:
     // no-cache: the request won't go through backend server's cache, it is revalidated with the actualy service (i.g. instagram) 
@@ -158,9 +166,13 @@ message InstagramTopSearchRequest {
     //
     // default value is  max-age=86400
     string cacheControl = 2;
+
+    // priority has three possible values: high/median/low.
+    // the server will execute jobs according to its priority.
+    string priority = 3;
 }
 
-message RawInstgramTopSearchObject {
+message RawTopSearchObject {
     string hashtag = 1;
     bytes rawBytes = 2;
 }

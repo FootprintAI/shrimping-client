@@ -14,30 +14,30 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ShrimpingInstagramClient is the client API for ShrimpingInstagram service.
+// ShritagramClient is the client API for Shritagram service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ShrimpingInstagramClient interface {
-	Callback(ctx context.Context, in *CallbackRequest, opts ...grpc.CallOption) (ShrimpingInstagram_CallbackClient, error)
-	Profile(ctx context.Context, in *InstagramProfileRequest, opts ...grpc.CallOption) (*InstagramResponse, error)
-	Posts(ctx context.Context, in *InstagramPostRequest, opts ...grpc.CallOption) (*InstagramResponse, error)
-	TopSearch(ctx context.Context, in *InstagramTopSearchRequest, opts ...grpc.CallOption) (*InstagramResponse, error)
+type ShritagramClient interface {
+	Callback(ctx context.Context, in *CallbackRequest, opts ...grpc.CallOption) (Shritagram_CallbackClient, error)
+	Profile(ctx context.Context, in *ProfileRequest, opts ...grpc.CallOption) (*ShritagramResponse, error)
+	Posts(ctx context.Context, in *PostRequest, opts ...grpc.CallOption) (*ShritagramResponse, error)
+	TopSearch(ctx context.Context, in *TopSearchRequest, opts ...grpc.CallOption) (*ShritagramResponse, error)
 }
 
-type shrimpingInstagramClient struct {
+type shritagramClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewShrimpingInstagramClient(cc grpc.ClientConnInterface) ShrimpingInstagramClient {
-	return &shrimpingInstagramClient{cc}
+func NewShritagramClient(cc grpc.ClientConnInterface) ShritagramClient {
+	return &shritagramClient{cc}
 }
 
-func (c *shrimpingInstagramClient) Callback(ctx context.Context, in *CallbackRequest, opts ...grpc.CallOption) (ShrimpingInstagram_CallbackClient, error) {
-	stream, err := c.cc.NewStream(ctx, &ShrimpingInstagram_ServiceDesc.Streams[0], "/pb.shrimpingInstagram/Callback", opts...)
+func (c *shritagramClient) Callback(ctx context.Context, in *CallbackRequest, opts ...grpc.CallOption) (Shritagram_CallbackClient, error) {
+	stream, err := c.cc.NewStream(ctx, &Shritagram_ServiceDesc.Streams[0], "/pb.shritagram/Callback", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &shrimpingInstagramCallbackClient{stream}
+	x := &shritagramCallbackClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -47,189 +47,189 @@ func (c *shrimpingInstagramClient) Callback(ctx context.Context, in *CallbackReq
 	return x, nil
 }
 
-type ShrimpingInstagram_CallbackClient interface {
-	Recv() (*InstagramResponse, error)
+type Shritagram_CallbackClient interface {
+	Recv() (*ShritagramResponse, error)
 	grpc.ClientStream
 }
 
-type shrimpingInstagramCallbackClient struct {
+type shritagramCallbackClient struct {
 	grpc.ClientStream
 }
 
-func (x *shrimpingInstagramCallbackClient) Recv() (*InstagramResponse, error) {
-	m := new(InstagramResponse)
+func (x *shritagramCallbackClient) Recv() (*ShritagramResponse, error) {
+	m := new(ShritagramResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
 	return m, nil
 }
 
-func (c *shrimpingInstagramClient) Profile(ctx context.Context, in *InstagramProfileRequest, opts ...grpc.CallOption) (*InstagramResponse, error) {
-	out := new(InstagramResponse)
-	err := c.cc.Invoke(ctx, "/pb.shrimpingInstagram/Profile", in, out, opts...)
+func (c *shritagramClient) Profile(ctx context.Context, in *ProfileRequest, opts ...grpc.CallOption) (*ShritagramResponse, error) {
+	out := new(ShritagramResponse)
+	err := c.cc.Invoke(ctx, "/pb.shritagram/Profile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *shrimpingInstagramClient) Posts(ctx context.Context, in *InstagramPostRequest, opts ...grpc.CallOption) (*InstagramResponse, error) {
-	out := new(InstagramResponse)
-	err := c.cc.Invoke(ctx, "/pb.shrimpingInstagram/Posts", in, out, opts...)
+func (c *shritagramClient) Posts(ctx context.Context, in *PostRequest, opts ...grpc.CallOption) (*ShritagramResponse, error) {
+	out := new(ShritagramResponse)
+	err := c.cc.Invoke(ctx, "/pb.shritagram/Posts", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *shrimpingInstagramClient) TopSearch(ctx context.Context, in *InstagramTopSearchRequest, opts ...grpc.CallOption) (*InstagramResponse, error) {
-	out := new(InstagramResponse)
-	err := c.cc.Invoke(ctx, "/pb.shrimpingInstagram/TopSearch", in, out, opts...)
+func (c *shritagramClient) TopSearch(ctx context.Context, in *TopSearchRequest, opts ...grpc.CallOption) (*ShritagramResponse, error) {
+	out := new(ShritagramResponse)
+	err := c.cc.Invoke(ctx, "/pb.shritagram/TopSearch", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ShrimpingInstagramServer is the server API for ShrimpingInstagram service.
-// All implementations must embed UnimplementedShrimpingInstagramServer
+// ShritagramServer is the server API for Shritagram service.
+// All implementations must embed UnimplementedShritagramServer
 // for forward compatibility
-type ShrimpingInstagramServer interface {
-	Callback(*CallbackRequest, ShrimpingInstagram_CallbackServer) error
-	Profile(context.Context, *InstagramProfileRequest) (*InstagramResponse, error)
-	Posts(context.Context, *InstagramPostRequest) (*InstagramResponse, error)
-	TopSearch(context.Context, *InstagramTopSearchRequest) (*InstagramResponse, error)
-	mustEmbedUnimplementedShrimpingInstagramServer()
+type ShritagramServer interface {
+	Callback(*CallbackRequest, Shritagram_CallbackServer) error
+	Profile(context.Context, *ProfileRequest) (*ShritagramResponse, error)
+	Posts(context.Context, *PostRequest) (*ShritagramResponse, error)
+	TopSearch(context.Context, *TopSearchRequest) (*ShritagramResponse, error)
+	mustEmbedUnimplementedShritagramServer()
 }
 
-// UnimplementedShrimpingInstagramServer must be embedded to have forward compatible implementations.
-type UnimplementedShrimpingInstagramServer struct {
+// UnimplementedShritagramServer must be embedded to have forward compatible implementations.
+type UnimplementedShritagramServer struct {
 }
 
-func (UnimplementedShrimpingInstagramServer) Callback(*CallbackRequest, ShrimpingInstagram_CallbackServer) error {
+func (UnimplementedShritagramServer) Callback(*CallbackRequest, Shritagram_CallbackServer) error {
 	return status.Errorf(codes.Unimplemented, "method Callback not implemented")
 }
-func (UnimplementedShrimpingInstagramServer) Profile(context.Context, *InstagramProfileRequest) (*InstagramResponse, error) {
+func (UnimplementedShritagramServer) Profile(context.Context, *ProfileRequest) (*ShritagramResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Profile not implemented")
 }
-func (UnimplementedShrimpingInstagramServer) Posts(context.Context, *InstagramPostRequest) (*InstagramResponse, error) {
+func (UnimplementedShritagramServer) Posts(context.Context, *PostRequest) (*ShritagramResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Posts not implemented")
 }
-func (UnimplementedShrimpingInstagramServer) TopSearch(context.Context, *InstagramTopSearchRequest) (*InstagramResponse, error) {
+func (UnimplementedShritagramServer) TopSearch(context.Context, *TopSearchRequest) (*ShritagramResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TopSearch not implemented")
 }
-func (UnimplementedShrimpingInstagramServer) mustEmbedUnimplementedShrimpingInstagramServer() {}
+func (UnimplementedShritagramServer) mustEmbedUnimplementedShritagramServer() {}
 
-// UnsafeShrimpingInstagramServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ShrimpingInstagramServer will
+// UnsafeShritagramServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ShritagramServer will
 // result in compilation errors.
-type UnsafeShrimpingInstagramServer interface {
-	mustEmbedUnimplementedShrimpingInstagramServer()
+type UnsafeShritagramServer interface {
+	mustEmbedUnimplementedShritagramServer()
 }
 
-func RegisterShrimpingInstagramServer(s grpc.ServiceRegistrar, srv ShrimpingInstagramServer) {
-	s.RegisterService(&ShrimpingInstagram_ServiceDesc, srv)
+func RegisterShritagramServer(s grpc.ServiceRegistrar, srv ShritagramServer) {
+	s.RegisterService(&Shritagram_ServiceDesc, srv)
 }
 
-func _ShrimpingInstagram_Callback_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Shritagram_Callback_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(CallbackRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(ShrimpingInstagramServer).Callback(m, &shrimpingInstagramCallbackServer{stream})
+	return srv.(ShritagramServer).Callback(m, &shritagramCallbackServer{stream})
 }
 
-type ShrimpingInstagram_CallbackServer interface {
-	Send(*InstagramResponse) error
+type Shritagram_CallbackServer interface {
+	Send(*ShritagramResponse) error
 	grpc.ServerStream
 }
 
-type shrimpingInstagramCallbackServer struct {
+type shritagramCallbackServer struct {
 	grpc.ServerStream
 }
 
-func (x *shrimpingInstagramCallbackServer) Send(m *InstagramResponse) error {
+func (x *shritagramCallbackServer) Send(m *ShritagramResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _ShrimpingInstagram_Profile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(InstagramProfileRequest)
+func _Shritagram_Profile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProfileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ShrimpingInstagramServer).Profile(ctx, in)
+		return srv.(ShritagramServer).Profile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.shrimpingInstagram/Profile",
+		FullMethod: "/pb.shritagram/Profile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShrimpingInstagramServer).Profile(ctx, req.(*InstagramProfileRequest))
+		return srv.(ShritagramServer).Profile(ctx, req.(*ProfileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ShrimpingInstagram_Posts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(InstagramPostRequest)
+func _Shritagram_Posts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ShrimpingInstagramServer).Posts(ctx, in)
+		return srv.(ShritagramServer).Posts(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.shrimpingInstagram/Posts",
+		FullMethod: "/pb.shritagram/Posts",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShrimpingInstagramServer).Posts(ctx, req.(*InstagramPostRequest))
+		return srv.(ShritagramServer).Posts(ctx, req.(*PostRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ShrimpingInstagram_TopSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(InstagramTopSearchRequest)
+func _Shritagram_TopSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TopSearchRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ShrimpingInstagramServer).TopSearch(ctx, in)
+		return srv.(ShritagramServer).TopSearch(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.shrimpingInstagram/TopSearch",
+		FullMethod: "/pb.shritagram/TopSearch",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShrimpingInstagramServer).TopSearch(ctx, req.(*InstagramTopSearchRequest))
+		return srv.(ShritagramServer).TopSearch(ctx, req.(*TopSearchRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ShrimpingInstagram_ServiceDesc is the grpc.ServiceDesc for ShrimpingInstagram service.
+// Shritagram_ServiceDesc is the grpc.ServiceDesc for Shritagram service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ShrimpingInstagram_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.shrimpingInstagram",
-	HandlerType: (*ShrimpingInstagramServer)(nil),
+var Shritagram_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.shritagram",
+	HandlerType: (*ShritagramServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Profile",
-			Handler:    _ShrimpingInstagram_Profile_Handler,
+			Handler:    _Shritagram_Profile_Handler,
 		},
 		{
 			MethodName: "Posts",
-			Handler:    _ShrimpingInstagram_Posts_Handler,
+			Handler:    _Shritagram_Posts_Handler,
 		},
 		{
 			MethodName: "TopSearch",
-			Handler:    _ShrimpingInstagram_TopSearch_Handler,
+			Handler:    _Shritagram_TopSearch_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Callback",
-			Handler:       _ShrimpingInstagram_Callback_Handler,
+			Handler:       _Shritagram_Callback_Handler,
 			ServerStreams: true,
 		},
 	},

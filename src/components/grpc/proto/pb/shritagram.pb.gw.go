@@ -31,7 +31,7 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_ShrimpingInstagram_Callback_0(ctx context.Context, marshaler runtime.Marshaler, client ShrimpingInstagramClient, req *http.Request, pathParams map[string]string) (ShrimpingInstagram_CallbackClient, runtime.ServerMetadata, error) {
+func request_Shritagram_Callback_0(ctx context.Context, marshaler runtime.Marshaler, client ShritagramClient, req *http.Request, pathParams map[string]string) (Shritagram_CallbackClient, runtime.ServerMetadata, error) {
 	var protoReq CallbackRequest
 	var metadata runtime.ServerMetadata
 
@@ -56,8 +56,8 @@ func request_ShrimpingInstagram_Callback_0(ctx context.Context, marshaler runtim
 
 }
 
-func request_ShrimpingInstagram_Profile_0(ctx context.Context, marshaler runtime.Marshaler, client ShrimpingInstagramClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq InstagramProfileRequest
+func request_Shritagram_Profile_0(ctx context.Context, marshaler runtime.Marshaler, client ShritagramClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ProfileRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -73,8 +73,8 @@ func request_ShrimpingInstagram_Profile_0(ctx context.Context, marshaler runtime
 
 }
 
-func local_request_ShrimpingInstagram_Profile_0(ctx context.Context, marshaler runtime.Marshaler, server ShrimpingInstagramServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq InstagramProfileRequest
+func local_request_Shritagram_Profile_0(ctx context.Context, marshaler runtime.Marshaler, server ShritagramServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ProfileRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -90,8 +90,8 @@ func local_request_ShrimpingInstagram_Profile_0(ctx context.Context, marshaler r
 
 }
 
-func request_ShrimpingInstagram_Posts_0(ctx context.Context, marshaler runtime.Marshaler, client ShrimpingInstagramClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq InstagramPostRequest
+func request_Shritagram_Posts_0(ctx context.Context, marshaler runtime.Marshaler, client ShritagramClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq PostRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -107,8 +107,8 @@ func request_ShrimpingInstagram_Posts_0(ctx context.Context, marshaler runtime.M
 
 }
 
-func local_request_ShrimpingInstagram_Posts_0(ctx context.Context, marshaler runtime.Marshaler, server ShrimpingInstagramServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq InstagramPostRequest
+func local_request_Shritagram_Posts_0(ctx context.Context, marshaler runtime.Marshaler, server ShritagramServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq PostRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -124,8 +124,8 @@ func local_request_ShrimpingInstagram_Posts_0(ctx context.Context, marshaler run
 
 }
 
-func request_ShrimpingInstagram_TopSearch_0(ctx context.Context, marshaler runtime.Marshaler, client ShrimpingInstagramClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq InstagramTopSearchRequest
+func request_Shritagram_TopSearch_0(ctx context.Context, marshaler runtime.Marshaler, client ShritagramClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq TopSearchRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -141,8 +141,8 @@ func request_ShrimpingInstagram_TopSearch_0(ctx context.Context, marshaler runti
 
 }
 
-func local_request_ShrimpingInstagram_TopSearch_0(ctx context.Context, marshaler runtime.Marshaler, server ShrimpingInstagramServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq InstagramTopSearchRequest
+func local_request_Shritagram_TopSearch_0(ctx context.Context, marshaler runtime.Marshaler, server ShritagramServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq TopSearchRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -158,31 +158,31 @@ func local_request_ShrimpingInstagram_TopSearch_0(ctx context.Context, marshaler
 
 }
 
-// RegisterShrimpingInstagramHandlerServer registers the http handlers for service ShrimpingInstagram to "mux".
-// UnaryRPC     :call ShrimpingInstagramServer directly.
+// RegisterShritagramHandlerServer registers the http handlers for service Shritagram to "mux".
+// UnaryRPC     :call ShritagramServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterShrimpingInstagramHandlerFromEndpoint instead.
-func RegisterShrimpingInstagramHandlerServer(ctx context.Context, mux *runtime.ServeMux, server ShrimpingInstagramServer) error {
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterShritagramHandlerFromEndpoint instead.
+func RegisterShritagramHandlerServer(ctx context.Context, mux *runtime.ServeMux, server ShritagramServer) error {
 
-	mux.Handle("POST", pattern_ShrimpingInstagram_Callback_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_Shritagram_Callback_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
 		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 		return
 	})
 
-	mux.Handle("POST", pattern_ShrimpingInstagram_Profile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_Shritagram_Profile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.ShrimpingInstagram/Profile", runtime.WithHTTPPathPattern("/v1/profiles:get"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.Shritagram/Profile", runtime.WithHTTPPathPattern("/v1/profiles:get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ShrimpingInstagram_Profile_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Shritagram_Profile_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -190,22 +190,22 @@ func RegisterShrimpingInstagramHandlerServer(ctx context.Context, mux *runtime.S
 			return
 		}
 
-		forward_ShrimpingInstagram_Profile_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Shritagram_Profile_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_ShrimpingInstagram_Posts_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_Shritagram_Posts_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.ShrimpingInstagram/Posts", runtime.WithHTTPPathPattern("/v1/posts:get"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.Shritagram/Posts", runtime.WithHTTPPathPattern("/v1/posts:get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ShrimpingInstagram_Posts_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Shritagram_Posts_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -213,22 +213,22 @@ func RegisterShrimpingInstagramHandlerServer(ctx context.Context, mux *runtime.S
 			return
 		}
 
-		forward_ShrimpingInstagram_Posts_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Shritagram_Posts_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_ShrimpingInstagram_TopSearch_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_Shritagram_TopSearch_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.ShrimpingInstagram/TopSearch", runtime.WithHTTPPathPattern("/v1/topsearchs:get"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.Shritagram/TopSearch", runtime.WithHTTPPathPattern("/v1/topsearchs:get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ShrimpingInstagram_TopSearch_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Shritagram_TopSearch_0(rctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -236,16 +236,16 @@ func RegisterShrimpingInstagramHandlerServer(ctx context.Context, mux *runtime.S
 			return
 		}
 
-		forward_ShrimpingInstagram_TopSearch_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Shritagram_TopSearch_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
 	return nil
 }
 
-// RegisterShrimpingInstagramHandlerFromEndpoint is same as RegisterShrimpingInstagramHandler but
+// RegisterShritagramHandlerFromEndpoint is same as RegisterShritagramHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterShrimpingInstagramHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterShritagramHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -265,99 +265,99 @@ func RegisterShrimpingInstagramHandlerFromEndpoint(ctx context.Context, mux *run
 		}()
 	}()
 
-	return RegisterShrimpingInstagramHandler(ctx, mux, conn)
+	return RegisterShritagramHandler(ctx, mux, conn)
 }
 
-// RegisterShrimpingInstagramHandler registers the http handlers for service ShrimpingInstagram to "mux".
+// RegisterShritagramHandler registers the http handlers for service Shritagram to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterShrimpingInstagramHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterShrimpingInstagramHandlerClient(ctx, mux, NewShrimpingInstagramClient(conn))
+func RegisterShritagramHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterShritagramHandlerClient(ctx, mux, NewShritagramClient(conn))
 }
 
-// RegisterShrimpingInstagramHandlerClient registers the http handlers for service ShrimpingInstagram
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "ShrimpingInstagramClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "ShrimpingInstagramClient"
+// RegisterShritagramHandlerClient registers the http handlers for service Shritagram
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "ShritagramClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "ShritagramClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "ShrimpingInstagramClient" to call the correct interceptors.
-func RegisterShrimpingInstagramHandlerClient(ctx context.Context, mux *runtime.ServeMux, client ShrimpingInstagramClient) error {
+// "ShritagramClient" to call the correct interceptors.
+func RegisterShritagramHandlerClient(ctx context.Context, mux *runtime.ServeMux, client ShritagramClient) error {
 
-	mux.Handle("POST", pattern_ShrimpingInstagram_Callback_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_Shritagram_Callback_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pb.ShrimpingInstagram/Callback", runtime.WithHTTPPathPattern("/v1/callback:stream"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pb.Shritagram/Callback", runtime.WithHTTPPathPattern("/v1/callback:stream"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ShrimpingInstagram_Callback_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Shritagram_Callback_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_ShrimpingInstagram_Callback_0(ctx, mux, outboundMarshaler, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
+		forward_Shritagram_Callback_0(ctx, mux, outboundMarshaler, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_ShrimpingInstagram_Profile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_Shritagram_Profile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pb.ShrimpingInstagram/Profile", runtime.WithHTTPPathPattern("/v1/profiles:get"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pb.Shritagram/Profile", runtime.WithHTTPPathPattern("/v1/profiles:get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ShrimpingInstagram_Profile_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Shritagram_Profile_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_ShrimpingInstagram_Profile_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Shritagram_Profile_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_ShrimpingInstagram_Posts_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_Shritagram_Posts_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pb.ShrimpingInstagram/Posts", runtime.WithHTTPPathPattern("/v1/posts:get"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pb.Shritagram/Posts", runtime.WithHTTPPathPattern("/v1/posts:get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ShrimpingInstagram_Posts_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Shritagram_Posts_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_ShrimpingInstagram_Posts_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Shritagram_Posts_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_ShrimpingInstagram_TopSearch_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_Shritagram_TopSearch_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pb.ShrimpingInstagram/TopSearch", runtime.WithHTTPPathPattern("/v1/topsearchs:get"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/pb.Shritagram/TopSearch", runtime.WithHTTPPathPattern("/v1/topsearchs:get"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ShrimpingInstagram_TopSearch_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Shritagram_TopSearch_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_ShrimpingInstagram_TopSearch_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Shritagram_TopSearch_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -365,21 +365,21 @@ func RegisterShrimpingInstagramHandlerClient(ctx context.Context, mux *runtime.S
 }
 
 var (
-	pattern_ShrimpingInstagram_Callback_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "callback"}, "stream"))
+	pattern_Shritagram_Callback_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "callback"}, "stream"))
 
-	pattern_ShrimpingInstagram_Profile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "profiles"}, "get"))
+	pattern_Shritagram_Profile_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "profiles"}, "get"))
 
-	pattern_ShrimpingInstagram_Posts_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "posts"}, "get"))
+	pattern_Shritagram_Posts_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "posts"}, "get"))
 
-	pattern_ShrimpingInstagram_TopSearch_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "topsearchs"}, "get"))
+	pattern_Shritagram_TopSearch_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "topsearchs"}, "get"))
 )
 
 var (
-	forward_ShrimpingInstagram_Callback_0 = runtime.ForwardResponseStream
+	forward_Shritagram_Callback_0 = runtime.ForwardResponseStream
 
-	forward_ShrimpingInstagram_Profile_0 = runtime.ForwardResponseMessage
+	forward_Shritagram_Profile_0 = runtime.ForwardResponseMessage
 
-	forward_ShrimpingInstagram_Posts_0 = runtime.ForwardResponseMessage
+	forward_Shritagram_Posts_0 = runtime.ForwardResponseMessage
 
-	forward_ShrimpingInstagram_TopSearch_0 = runtime.ForwardResponseMessage
+	forward_Shritagram_TopSearch_0 = runtime.ForwardResponseMessage
 )

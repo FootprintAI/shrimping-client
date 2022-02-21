@@ -1,0 +1,151 @@
+syntax = "proto3";
+
+option go_package = "/pb";
+package pb;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+	info: {
+		title: "Shritagram API Documentations";
+		version: "1.0";
+		contact: {
+			name: "shritagram restapi documentation";
+			url: "https://github.com/footprintai/shrimping-client";
+			email: "shrimping@footprint-ai.com";
+		};
+		license: {
+			name: "BSD 3-Clause License";
+			url: "https://github.com/footprintai/shrimping-client/blob/master/LICENSE.txt";
+		};
+	};
+	// Overwriting host entry breaks tests, so this is not done here.
+	external_docs: {
+		url: "https://github.com/footprintai/shrimping-client";
+		description: "shritagram restapi";
+	}
+	schemes: HTTP;
+	schemes: HTTPS;
+	consumes: "application/json";
+	produces: "application/json";
+	security_definitions: {
+		security: {
+			key: "ApiKeyAuth";
+			value: {
+				type: TYPE_API_KEY;
+				in: IN_HEADER;
+				name: "Authorization";
+			}
+		}
+	}
+	security: {
+		security_requirement: {
+			key: "ApiKeyAuth";
+			value: {};
+		}
+	}
+	responses: {
+		key: "403";
+		value: {
+			description: "Returned when the user does not have permission to access the resource.";
+		}
+	}
+	responses: {
+		key: "404";
+		value: {
+			description: "Returned when the resource does not exist.";
+			schema: {
+				json_schema: {
+					type: STRING;
+				}
+			}
+		}
+	}
+	responses: {
+		key: "500";
+		value: {
+			description: "Server error";
+			schema: {
+				json_schema: {
+                    type: STRING;
+				}
+			}
+		}
+	}
+};
+
+service WebhookCRUD {
+    rpc TestWebhook(TestWebhookRequest) returns (TestWebhookResponse) {
+        option (google.api.http) = {
+            post: "/v1/webhook:test"
+            body: "*"
+        };
+    }
+    rpc VerifySignature(VerifySignatureRequest) returns (VerifySignatureResponse) {
+        option (google.api.http) = {
+            post: "/v1/webhook:signature"
+            body: "*"
+        };
+    }
+    rpc SubscribeWebhook(SubscribeWebhookRequest) returns (SubscribeWebhookResponse) {
+        option (google.api.http) = {
+            post: "/v1/webhook:subscribe"
+            body: "*"
+        };
+    }
+    rpc ListWebhook(ListWebhookRequest) returns (ListWebhookResponse) {
+        option (google.api.http) = {
+            post: "/v1/webhook:list"
+            body: "*"
+        };
+    }
+    rpc DeleteWebhook(DeleteWebhookRequest) returns (DeleteWebhookResponse) {
+        option (google.api.http) = {
+            post: "/v1/webhook:delete"
+            body: "*"
+        };
+    }
+}
+
+message TestWebhookRequest {}
+message TestWebhookResponse{}
+message VerifySignatureRequest{
+    string host = 1;
+    string hmackey =2;
+    string bodyDigest = 3;
+    optional int32 createdTs =4;
+}
+message VerifySignatureResponse{
+    string signStr =1;
+    string signature = 2;
+    string httpHeaders = 3;
+}
+
+message SubscribeWebhookRequest{
+    string webhookAddress = 1;
+    optional bool forceHttps = 2;
+}
+
+message SubscribeWebhookResponse{
+    WebhookData data = 1;
+}
+
+message WebhookData{
+    string apiKey = 1;
+    string secretKey = 2;
+    string address = 3;
+    string createdAt = 4;
+    string updatedAt = 5;
+}
+
+message ListWebhookRequest{}
+message ListWebhookResponse{
+    repeated WebhookData list = 1;
+}
+
+message DeleteWebhookRequest{
+    repeated string apiKeys = 1;
+}
+message DeleteWebhookResponse{}
+

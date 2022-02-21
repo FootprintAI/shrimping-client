@@ -1,4 +1,4 @@
-package shopeeclient
+package instagramclient
 
 import (
 	"context"
@@ -18,33 +18,98 @@ import (
 	"github.com/footprintai/shrimping/components/grpc/version"
 )
 
-func NewClient(serverAddr string, apiKey string, timeout time.Duration, cachePolicy string, callOptions ...grpc.CallOption) (*Client, error) {
+func NewClient(serverAddr string, apiKey string, timeout time.Duration, callOptions ...grpc.CallOption) (*Client, error) {
 	clientConn, err := client.NewGrpcClient(serverAddr)
 	if err != nil {
 		return nil, err
 	}
 	return &Client{
-		pbClient:    pb.NewShrimpingInstagramClient(clientConn),
-		verClient:   pb.NewVersioningClient(clientConn),
-		callOpts:    callOptions,
-		conn:        clientConn,
-		apiKey:      apiKey,
-		timeout:     timeout,
-		cachePolicy: cachePolicy,
+		pbClient:   pb.NewShritagramClient(clientConn),
+		verClient:  pb.NewVersioningClient(clientConn),
+		crudClient: pb.NewWebhookCRUDClient(clientConn),
+		callOpts:   callOptions,
+		conn:       clientConn,
+		apiKey:     apiKey,
+		timeout:    timeout,
 	}, nil
 }
 
 type Client struct {
-	pbClient    pb.ShrimpingInstagramClient
-	verClient   pb.VersioningClient
-	callOpts    []grpc.CallOption
-	conn        *client.GrpcClient
-	timeout     time.Duration
-	apiKey      string
-	cachePolicy string
+	pbClient   pb.ShritagramClient
+	verClient  pb.VersioningClient
+	crudClient pb.WebhookCRUDClient
+	callOpts   []grpc.CallOption
+	conn       *client.GrpcClient
+	timeout    time.Duration
+	apiKey     string
 }
 
-func (c *Client) Callback(cb func(*pb.InstagramResponse) error) error {
+func (c *Client) TestWebhook() error {
+	ctx := context.Background()
+	_, err := c.crudClient.TestWebhook(ctx, &pb.TestWebhookRequest{})
+	return err
+}
+
+func (c *Client) VerifySignature(host, hmackey string, bodydigest string, createdTs *int32) (signStr string, signature string, headers string, err error) {
+	ctx := context.Background()
+	resp, err := c.crudClient.VerifySignature(c.ctxWithToken(ctx), &pb.VerifySignatureRequest{
+		Host:       host,
+		Hmackey:    hmackey,
+		BodyDigest: bodydigest,
+		CreatedTs:  createdTs,
+	})
+	if err != nil {
+		return "", "", "", err
+	}
+	return resp.SignStr, resp.Signature, resp.HttpHeaders, nil
+
+}
+
+func (c *Client) SubscribeWebhook(webhookHost string, forceHttps bool) (apikey, secret, host string, err error) {
+	ctx := context.Background()
+	resp, err := c.crudClient.SubscribeWebhook(c.ctxWithToken(ctx), &pb.SubscribeWebhookRequest{
+		WebhookAddress: webhookHost,
+		ForceHttps:     &forceHttps,
+	})
+	if err != nil {
+		return "", "", "", err
+	}
+	return resp.Data.ApiKey, resp.Data.SecretKey, resp.Data.Address, nil
+}
+
+type WebhookResponse struct {
+	ApiKey         string
+	ApiSecret      string
+	WebhookAddress string
+}
+
+func (c *Client) ListWebhook() ([]*WebhookResponse, error) {
+	ctx := context.Background()
+	resp, err := c.crudClient.ListWebhook(c.ctxWithToken(ctx), &pb.ListWebhookRequest{})
+	if err != nil {
+		return nil, err
+	}
+	var respList []*WebhookResponse
+	for _, data := range resp.List {
+		respList = append(respList, &WebhookResponse{
+			ApiKey:         data.ApiKey,
+			ApiSecret:      data.SecretKey,
+			WebhookAddress: data.Address,
+		})
+	}
+	return respList, nil
+}
+
+func (c *Client) DeleteWebhook(apikeys []string) error {
+	ctx := context.Background()
+	_, err := c.crudClient.DeleteWebhook(c.ctxWithToken(ctx), &pb.DeleteWebhookRequest{ApiKeys: apikeys})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Client) Callback(cb func(*pb.ShritagramResponse) error) error {
 	ctx := context.Background()
 	for {
 		stream, err := c.pbClient.Callback(c.ctxWithToken(ctx), &pb.CallbackRequest{}, c.callOpts...)
@@ -53,7 +118,6 @@ func (c *Client) Callback(cb func(*pb.InstagramResponse) error) error {
 			return errors.ParseError(err)
 		}
 		for {
-			log.Info("callback: start receiving")
 			resp, err := stream.Recv()
 			if err == io.EOF {
 				log.Info("callback: got eof, reconnecting")
@@ -73,29 +137,29 @@ func (c *Client) Callback(cb func(*pb.InstagramResponse) error) error {
 	}
 }
 
-func (c *Client) Profile(usernames []string) ([]*pb.InstagramResponse, error) {
+func (c *Client) Profile(usernames []string, cachePolicy string, priority string) ([]*pb.ShritagramResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
 	defer cancel()
 
-	resp, err := c.pbClient.Profile(c.ctxWithToken(ctx), &pb.InstagramProfileRequest{
+	resp, err := c.pbClient.Profile(c.ctxWithToken(ctx), &pb.ProfileRequest{
 		Usernames:    usernames,
-		CacheControl: c.cachePolicy,
+		CacheControl: cachePolicy,
+		Priority:     priority,
 	}, c.callOpts...)
 	if err != nil {
 		return nil, errors.ParseError(err)
 	}
-	return []*pb.InstagramResponse{decompress(resp)}, nil
+	return []*pb.ShritagramResponse{decompress(resp)}, nil
 }
 
-func decompress(out *pb.InstagramResponse) *pb.InstagramResponse {
-	if out.Compression != pb.InstagramObjectCompressionAlgorithm_GZIP {
+func decompress(out *pb.ShritagramResponse) *pb.ShritagramResponse {
+	if out.Compression != pb.ObjectCompressionAlgorithm_GZIP {
 		return out
 	}
 	compressor := &compression.GzipEncodeDecoder{}
 	for _, rawProfile := range out.RawProfiles {
 		if rawProfile != nil {
 			rawProfile.RawBytes, _ = compressor.Decode(rawProfile.RawBytes)
-
 		}
 	}
 	for _, rawPost := range out.RawPosts {
@@ -117,31 +181,33 @@ func (c *Client) ctxWithToken(ctx context.Context) context.Context {
 	return nCtx
 }
 
-func (c *Client) Posts(shortcodes []string) ([]*pb.InstagramResponse, error) {
+func (c *Client) Posts(shortcodes []string, cachePolicy string, priority string) ([]*pb.ShritagramResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
 	defer cancel()
 
-	resp, err := c.pbClient.Posts(c.ctxWithToken(ctx), &pb.InstagramPostRequest{
+	resp, err := c.pbClient.Posts(c.ctxWithToken(ctx), &pb.PostRequest{
 		Shortcodes:   shortcodes,
-		CacheControl: c.cachePolicy,
+		CacheControl: cachePolicy,
+		Priority:     priority,
 	}, c.callOpts...)
 	if err != nil {
 		return nil, errors.ParseError(err)
 	}
-	return []*pb.InstagramResponse{decompress(resp)}, nil
+	return []*pb.ShritagramResponse{decompress(resp)}, nil
 }
 
-func (c *Client) TopSearch(hashtags []string) ([]*pb.InstagramResponse, error) {
+func (c *Client) TopSearch(hashtags []string, priority string) ([]*pb.ShritagramResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.timeout)
 	defer cancel()
 
-	out, err := c.pbClient.TopSearch(c.ctxWithToken(ctx), &pb.InstagramTopSearchRequest{
+	out, err := c.pbClient.TopSearch(c.ctxWithToken(ctx), &pb.TopSearchRequest{
 		Hashtags: hashtags,
+		Priority: priority,
 	}, c.callOpts...)
 	if err != nil {
 		return nil, errors.ParseError(err)
 	}
-	return []*pb.InstagramResponse{decompress(out)}, nil
+	return []*pb.ShritagramResponse{decompress(out)}, nil
 }
 
 func (c *Client) Version() (serverVersion string, isVersionCompatible bool, err error) {

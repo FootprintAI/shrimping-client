@@ -15,7 +15,7 @@
   },
   "tags": [
     {
-      "name": "shrimpingInstagram"
+      "name": "shritagram"
     }
   ],
   "schemes": [
@@ -31,7 +31,7 @@
   "paths": {
     "/v1/callback:stream": {
       "post": {
-        "operationId": "shrimpingInstagram_Callback",
+        "operationId": "shritagram_Callback",
         "responses": {
           "200": {
             "description": "A successful response.(streaming responses)",
@@ -39,13 +39,13 @@
               "type": "object",
               "properties": {
                 "result": {
-                  "$ref": "#/definitions/pbInstagramResponse"
+                  "$ref": "#/definitions/pbShritagramResponse"
                 },
                 "error": {
                   "$ref": "#/definitions/rpcStatus"
                 }
               },
-              "title": "Stream result of pbInstagramResponse"
+              "title": "Stream result of pbShritagramResponse"
             }
           },
           "403": {
@@ -84,18 +84,18 @@
           }
         ],
         "tags": [
-          "shrimpingInstagram"
+          "shritagram"
         ]
       }
     },
     "/v1/posts:get": {
       "post": {
-        "operationId": "shrimpingInstagram_Posts",
+        "operationId": "shritagram_Posts",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/pbInstagramResponse"
+              "$ref": "#/definitions/pbShritagramResponse"
             }
           },
           "403": {
@@ -129,23 +129,23 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/pbInstagramPostRequest"
+              "$ref": "#/definitions/pbPostRequest"
             }
           }
         ],
         "tags": [
-          "shrimpingInstagram"
+          "shritagram"
         ]
       }
     },
     "/v1/profiles:get": {
       "post": {
-        "operationId": "shrimpingInstagram_Profile",
+        "operationId": "shritagram_Profile",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/pbInstagramResponse"
+              "$ref": "#/definitions/pbShritagramResponse"
             }
           },
           "403": {
@@ -179,23 +179,23 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/pbInstagramProfileRequest"
+              "$ref": "#/definitions/pbProfileRequest"
             }
           }
         ],
         "tags": [
-          "shrimpingInstagram"
+          "shritagram"
         ]
       }
     },
     "/v1/topsearchs:get": {
       "post": {
-        "operationId": "shrimpingInstagram_TopSearch",
+        "operationId": "shritagram_TopSearch",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/pbInstagramResponse"
+              "$ref": "#/definitions/pbShritagramResponse"
             }
           },
           "403": {
@@ -229,12 +229,12 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/pbInstagramTopSearchRequest"
+              "$ref": "#/definitions/pbTopSearchRequest"
             }
           }
         ],
         "tags": [
-          "shrimpingInstagram"
+          "shritagram"
         ]
       }
     }
@@ -243,7 +243,7 @@
     "pbCallbackRequest": {
       "type": "object"
     },
-    "pbInstagramObjectCompressionAlgorithm": {
+    "pbObjectCompressionAlgorithm": {
       "type": "string",
       "enum": [
         "NONE",
@@ -251,7 +251,7 @@
       ],
       "default": "NONE"
     },
-    "pbInstagramPostRequest": {
+    "pbPostRequest": {
       "type": "object",
       "properties": {
         "shortcodes": {
@@ -264,10 +264,14 @@
           "type": "string",
           "description": "default value is  max-age=86400",
           "title": "cacheControl has possible values:\nno-cache: the request won't go through backend server's cache, it is revalidated with the actualy service (i.g. instagram) \nmax-age=604800: the request's result will be kept in cache with the duration(in s) specified"
+        },
+        "priority": {
+          "type": "string",
+          "description": "priority has three possible values: high/median/low.\nthe server will execute jobs according to its priority."
         }
       }
     },
-    "pbInstagramProfileRequest": {
+    "pbProfileRequest": {
       "type": "object",
       "properties": {
         "usernames": {
@@ -280,36 +284,76 @@
           "type": "string",
           "description": "default value is  max-age=86400",
           "title": "cacheControl has possible values:\nno-cache: the request won't go through backend server's cache, it is revalidated with the actualy service (i.g. instagram) \nmax-age=604800: the request's result will be kept in cache with the duration(in s) specified"
+        },
+        "priority": {
+          "type": "string",
+          "description": "priority has three possible values: high/median/low.\nthe server will execute jobs according to its priority."
         }
       }
     },
-    "pbInstagramResponse": {
+    "pbRawPostObject": {
+      "type": "object",
+      "properties": {
+        "shortcode": {
+          "type": "string"
+        },
+        "rawBytes": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "pbRawProfileObject": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "rawBytes": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "pbRawTopSearchObject": {
+      "type": "object",
+      "properties": {
+        "hashtag": {
+          "type": "string"
+        },
+        "rawBytes": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "pbShritagramResponse": {
       "type": "object",
       "properties": {
         "compression": {
-          "$ref": "#/definitions/pbInstagramObjectCompressionAlgorithm"
+          "$ref": "#/definitions/pbObjectCompressionAlgorithm"
         },
         "rawProfiles": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/pbRawInstagramProfileObject"
+            "$ref": "#/definitions/pbRawProfileObject"
           }
         },
         "rawPosts": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/pbRawInstagramPostObject"
+            "$ref": "#/definitions/pbRawPostObject"
           }
         },
         "rawTopSearchs": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/pbRawInstgramTopSearchObject"
+            "$ref": "#/definitions/pbRawTopSearchObject"
           }
         }
       }
     },
-    "pbInstagramTopSearchRequest": {
+    "pbTopSearchRequest": {
       "type": "object",
       "properties": {
         "hashtags": {
@@ -322,42 +366,10 @@
           "type": "string",
           "description": "default value is  max-age=86400",
           "title": "cacheControl has possible values:\nno-cache: the request won't go through backend server's cache, it is revalidated with the actualy service (i.g. instagram) \nmax-age=604800: the request's result will be kept in cache with the duration(in s) specified"
-        }
-      }
-    },
-    "pbRawInstagramPostObject": {
-      "type": "object",
-      "properties": {
-        "shortcode": {
-          "type": "string"
         },
-        "rawBytes": {
+        "priority": {
           "type": "string",
-          "format": "byte"
-        }
-      }
-    },
-    "pbRawInstagramProfileObject": {
-      "type": "object",
-      "properties": {
-        "username": {
-          "type": "string"
-        },
-        "rawBytes": {
-          "type": "string",
-          "format": "byte"
-        }
-      }
-    },
-    "pbRawInstgramTopSearchObject": {
-      "type": "object",
-      "properties": {
-        "hashtag": {
-          "type": "string"
-        },
-        "rawBytes": {
-          "type": "string",
-          "format": "byte"
+          "description": "priority has three possible values: high/median/low.\nthe server will execute jobs according to its priority."
         }
       }
     },
@@ -392,7 +404,7 @@
   "securityDefinitions": {
     "ApiKeyAuth": {
       "type": "apiKey",
-      "name": "X-API-Key",
+      "name": "Authorization",
       "in": "header"
     }
   },

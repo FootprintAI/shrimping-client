@@ -25,6 +25,7 @@ var (
 	apiKey       string
 	outputfolder string
 	cachePolicy  string
+	priority     string
 	// Shritagram = Shrimping + instagram
 
 	rootCmd = &cobra.Command{
@@ -41,7 +42,7 @@ var (
 		Use:   "version",
 		Short: "show server/client version",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			run := mustNewRunCmd(serverAddr, apiKey, cachePolicy)
+			run := mustNewRunCmd(serverAddr, apiKey)
 			if err := run.doVersion(); err != nil {
 				return err
 			}
@@ -56,7 +57,7 @@ var (
 		Use:   "callback",
 		Short: "get instagram results with callback",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			run := mustNewRunCmd(serverAddr, apiKey, cachePolicy)
+			run := mustNewRunCmd(serverAddr, apiKey)
 			run.shortVersion()
 			if err := run.callback(outputfolder); err != nil {
 				return err
@@ -72,7 +73,7 @@ var (
 		Use:   "profile",
 		Short: "get instagram profile with username",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			run := mustNewRunCmd(serverAddr, apiKey, cachePolicy)
+			run := mustNewRunCmd(serverAddr, apiKey)
 			run.shortVersion()
 			if err := run.getProfile(args, outputfolder); err != nil {
 				return err
@@ -88,7 +89,7 @@ var (
 		Use:   "posts",
 		Short: "get instagram posts with shortcodes",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			run := mustNewRunCmd(serverAddr, apiKey, cachePolicy)
+			run := mustNewRunCmd(serverAddr, apiKey)
 			run.shortVersion()
 			if err := run.getPosts(args, outputfolder); err != nil {
 				return err
@@ -104,7 +105,7 @@ var (
 		Use:   "topsearch",
 		Short: "search instagram with keyword or hashtag",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			run := mustNewRunCmd(serverAddr, apiKey, cachePolicy)
+			run := mustNewRunCmd(serverAddr, apiKey)
 			run.shortVersion()
 			if err := run.topSearch(args, outputfolder); err != nil {
 				return err
@@ -117,15 +118,15 @@ var (
 	}
 )
 
-func mustNewRunCmd(serverAddr, token, cachePolicy string) *runCmd {
-	cmd, err := newRunCmd(serverAddr, token, cachePolicy)
+func mustNewRunCmd(serverAddr, token string) *runCmd {
+	cmd, err := newRunCmd(serverAddr, token)
 	if err != nil {
 		panic(err)
 	}
 	return cmd
 }
 
-func newRunCmd(serverAddr, apiKey, cachePolicy string) (*runCmd, error) {
+func newRunCmd(serverAddr, apiKey string) (*runCmd, error) {
 	if serverAddr == "" {
 		return nil, errors.New("invalid server address, use --svr_address to specify")
 	}
@@ -136,7 +137,6 @@ func newRunCmd(serverAddr, apiKey, cachePolicy string) (*runCmd, error) {
 		serverAddr,
 		apiKey,
 		time.Duration(timeoutInSec())*time.Second,
-		cachePolicy,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect server :%s", serverAddr)
@@ -200,15 +200,15 @@ func (p *ProgressBar) reportLoop() {
 }
 
 func (r *runCmd) callback(outputfolder string) error {
-	cb := func(resp *protopb.InstagramResponse) error {
+	cb := func(resp *protopb.ShritagramResponse) error {
 		log.Infof("callback received.")
-		return writeInstagramObjectToFolder([]*protopb.InstagramResponse{resp}, outputfolder)
+		return writeInstagramObjectToFolder([]*protopb.ShritagramResponse{resp}, outputfolder)
 	}
 	return r.clientService.Callback(cb)
 }
 
 func (r *runCmd) getProfile(usernames []string, outputfolder string) error {
-	out, err := r.clientService.Profile(usernames)
+	out, err := r.clientService.Profile(usernames, cachePolicy, priority)
 	if err != nil {
 		return err
 	}
@@ -216,7 +216,7 @@ func (r *runCmd) getProfile(usernames []string, outputfolder string) error {
 }
 
 func (r *runCmd) getPosts(shortcodes []string, outputfolder string) error {
-	out, err := r.clientService.Posts(shortcodes)
+	out, err := r.clientService.Posts(shortcodes, cachePolicy, priority)
 	if err != nil {
 		return err
 	}
@@ -226,7 +226,7 @@ func (r *runCmd) getPosts(shortcodes []string, outputfolder string) error {
 	return nil
 }
 
-func writeInstagramObjectToFolder(outs []*protopb.InstagramResponse, folder string) error {
+func writeInstagramObjectToFolder(outs []*protopb.ShritagramResponse, folder string) error {
 	os.MkdirAll(folder, os.ModePerm)
 	for _, out := range outs {
 		for _, rawProfile := range out.RawProfiles {
@@ -259,7 +259,7 @@ func writeFile(filepath string, content []byte) error {
 }
 
 func (r *runCmd) topSearch(keywords []string, outputfolder string) error {
-	out, err := r.clientService.TopSearch(keywords)
+	out, err := r.clientService.TopSearch(keywords, priority)
 	if err != nil {
 		return err
 	}
@@ -315,6 +315,7 @@ func init() {
 	rootCmd.PersistentFlags().IntVar(&timeout, "timeout", 180, "timeout duration in second. (default: 180)")
 	rootCmd.PersistentFlags().StringVar(&apiKey, "apikey", "", "apikey for access apis")
 	rootCmd.PersistentFlags().StringVar(&cachePolicy, "cachepolicy", "", "cache policy, (default: max-age:86400). use no-cache to ignore cache check")
+	rootCmd.PersistentFlags().StringVar(&priority, "priority", "", "priority, (default: low), possible value: high/median/low.")
 	profileCmd.Flags().StringVar(&outputfolder, "output_dir", "./output", "output dir")
 	postsCmd.Flags().StringVar(&outputfolder, "output_dir", "./output", "output dir")
 }

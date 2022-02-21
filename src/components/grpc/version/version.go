@@ -9,7 +9,7 @@ import (
 var (
 	BuildTime   = ""
 	GitCommitId = ""
-	version, _  = goversion.NewVersion("1.2.0")
+	version, _  = goversion.NewVersion("1.3.1")
 )
 
 func GreatThan(v1, v2 string) bool {
