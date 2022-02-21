@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.1] - 2022-02-21
+### Added
+- Added webhook endpoint and apikey binding. When registered a webhook, a new apikey is returned for futher usage.
+- Added priority on each request, so client can manually specify which priority should be used.
+
 ## [1.2.0] - 2022-01-21
 ### Added
 - Added topsearch implemenation on server side.
